@@ -1,0 +1,4 @@
+RewriteBase /du_an_11/app/
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^admin/(.*)$ admin/index.php?route=/$1 [L,QSA]
