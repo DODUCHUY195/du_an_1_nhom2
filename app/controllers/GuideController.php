@@ -1,5 +1,5 @@
 <?php
-class GuideController
+class GuideController extends BaseController
 {
     public function index()
     {

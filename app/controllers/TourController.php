@@ -1,5 +1,5 @@
 <?php
-class TourController
+class TourController extends BaseController
 {
     public function index()
     {
