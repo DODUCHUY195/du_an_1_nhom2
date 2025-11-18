@@ -1,4 +1,3 @@
-
 <?php
 // DEV: hiển thị lỗi tạm thời để debug
 ini_set('display_errors', 1);
@@ -82,6 +81,20 @@ function callController($class, $method = 'index', $params = []) {
         echo "Method '{$method}' không tồn tại trong {$class}."; return;
     }
     call_user_func_array([$c, $method], $params);
+}
+
+// thêm bảng route đơn giản (đặt trước phần gọi controller chung)
+$staticRoutes = [
+    '/login'    => ['AuthController', 'login'],
+    '/register' => ['AuthController', 'register'],
+    '/logout'   => ['AuthController', 'logout'],
+];
+
+// nếu route khớp static route thì gọi trực tiếp
+if (isset($staticRoutes[$route])) {
+    [$ctrl, $method] = $staticRoutes[$route];
+    callController($ctrl, $method);
+    exit;
 }
 
 // ====== Router ======

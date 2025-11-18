@@ -1,5 +1,5 @@
 <?php
-class ScheduleController
+class ScheduleController extends BaseController
 {
     public function index()
     {

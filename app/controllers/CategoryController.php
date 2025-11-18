@@ -1,5 +1,5 @@
 <?php
-class CategoryController
+class CategoryController extends BaseController
 {
     public function index()
     {

@@ -1,5 +1,5 @@
 <?php
-class BookingController
+class BookingController extends BaseController
 {
     public function index()
     {

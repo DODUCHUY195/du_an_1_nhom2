@@ -1,5 +1,5 @@
 <?php
-class AdminBookingController
+class AdminBookingController extends BaseController
 {
     public function index()
     {
