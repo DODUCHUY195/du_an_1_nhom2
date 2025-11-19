@@ -6,9 +6,8 @@
 <main class="relative h-full max-h-screen transition-all xl:ml-68 rounded-xl">
 
     <?php require_once  "./views/layouts/admin/navbar.php"; ?>
-    
+    <h2>Them danh muc</h2>
     <div class="w-full px-6 py-6 mx-auto">
-      <h2><a href="<?= BASE_URL . '?route=/tours/create' ?>">Them danh muc</a></h2>
        <div class="flex flex-wrap -mx-3">
           <div class="flex-none w-full max-w-full px-3">
             <div class="relative flex flex-col min-w-0 mb-6 break-words bg-white border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
@@ -73,4 +72,4 @@
 
 </main>
 
-<?php require_once  "./views/layouts/admin/footer.php"; ?>
+<?php require_once  "./views/layouts/footer.php"; ?>

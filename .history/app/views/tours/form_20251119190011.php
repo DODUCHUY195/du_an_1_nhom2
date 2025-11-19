@@ -7,7 +7,7 @@
   <?php require_once  "./views/layouts/admin/navbar.php"; ?>
 
   <div class="w-full p-6 mx-auto">
-    <h2>Them danh muc</h2>
+    <p class="mb-0 dark:text-white/80">Them danh muc</p>
     <div class="flex flex-wrap -mx-3">
       <div class="w-full max-w-full px-3 shrink-0 md:w-8/12 md:flex-0">
         <div class="relative flex flex-col min-w-0 break-words bg-white border-0 shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">

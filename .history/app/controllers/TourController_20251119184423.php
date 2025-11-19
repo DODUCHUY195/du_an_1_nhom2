@@ -1,5 +1,5 @@
 <?php
-class ScheduleController
+class TourController
 {
     public function index()
     {
@@ -7,10 +7,7 @@ class ScheduleController
     }
     public function create()
     {
-        
     }
-    public function edit($id)
-    {
-       
-    }
+
+    public function edit() {}
 }

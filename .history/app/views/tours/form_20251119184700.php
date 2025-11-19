@@ -1,4 +1,3 @@
-
 <?php require_once "./views/layouts/admin/header.php"; ?>
 
 <?php require_once  "./views/layouts/admin/sidebar.php"; ?>
@@ -72,5 +71,6 @@
     </div>
 
 </main>
+
 
 <?php require_once  "./views/layouts/admin/footer.php"; ?>
