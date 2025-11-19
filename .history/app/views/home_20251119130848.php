@@ -1,11 +1,11 @@
 
-<?php require_once "./views/layouts/admin/header.php"; ?>
+<?php require_once "./views/layouts/header.php"; ?>
 
-<?php require_once  "./views/layouts/admin/sidebar.php"; ?>
+<?php require_once  "./views/layouts/sidebar.php"; ?>
 
 <main class="relative h-full max-h-screen transition-all xl:ml-68 rounded-xl pt-20">
 
-    <?php require_once  "./views/layouts/admin/navbar.php"; ?>
+    <?php require_once  "./views/layouts/navbar.php"; ?>
 
     <div class="w-full px-6 py-6 mx-auto">
        <div class="flex flex-wrap -mx-3">
@@ -64,4 +64,4 @@
 
 </main>
 
-<?php require_once  "./views/layouts/admin/footer.php"; ?>
+<?php require_once  "./views/layouts/footer.php"; ?>
