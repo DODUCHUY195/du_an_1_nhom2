@@ -36,23 +36,30 @@
                       </tr>
                     </thead>
                     <tbody>
-          <?php if (!empty($categories)): ?>
-            <?php foreach ($categories as $c): ?>
-              <tr>
-                <td><?= htmlspecialchars($c['category_id']) ?></td>
-                <td><?= htmlspecialchars($c['description']) ?></td>
-                <td><?= htmlspecialchars($c['category_name']) ?></td>
-                <td>
-                  <form method="post" action="?route=/categories/delete" onsubmit="return confirm('Bạn chắc chắn muốn xóa?')" style="display:inline;">
-                    <input type="hidden" name="id" value="<?= $c['category_id'] ?>">
-                    <button type="submit" class="btn btn-danger btn-sm">Xóa</button>
-                  </form>
-                </td>
-              </tr>
-            <?php endforeach; ?>
-          <?php else: ?>
-            <tr><td colspan="4" style="text-align:center;">Không có dữ liệu</td></tr>
-          <?php endif; ?>
+                    
+                     
+                        
+                    
+                      <tr>
+                       <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">abc</td>
+                         <!-- <?php foreach ($listDanhMuc as $key => $danhMuc): ?>
+                    <tr>
+                      <td><?= $key + 1 ?></td>
+                      <td><?= $danhMuc['ten_danh_muc'] ?></td>
+                      <td><?= $danhMuc['mo_ta'] ?></td>
+                      <td>
+                        <a class="btn btn-warning" href="<?= BASE_URL_ADMIN . '?act=formsuadanhmuc&id_danh_muc=' . $danhMuc['id'] ?>">
+                          <i class="fas fa-wrench"></i>
+                        </a>
+                        <a class="btn btn-danger" href="<?= BASE_URL_ADMIN . '?act=xoadanhmuc&id_danh_muc=' . $danhMuc['id'] ?>" onclick="return confirm('Bạn có đồng ý xoá không')"><i class="fas fa-trash-alt"></i></a>
+
+                      </td>
+                    </tr>
+                  <?php endforeach ?> -->
+
+                      </tr>
+                     
+                    
                     </tbody>
                   </table>
                 </div>

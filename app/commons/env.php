@@ -9,7 +9,7 @@ define('DB_USERNAME','root');
 
 define('DB_PASSWORD','');
 
-define('DB_NAME','xuong_quan_ao');
+define('DB_NAME','du_an_11');
 
 define('PATH_ROOT', __DIR__ . '/../');
 

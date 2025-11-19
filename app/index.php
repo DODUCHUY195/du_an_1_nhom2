@@ -144,6 +144,9 @@ switch ($route) {
     case '/categories/create':
         callController('CategoryController', 'create');
         break;
+    case '/categories/delete':
+        callController('CategoryController', 'delete');
+        break;
 
     case '/bookings':
         callController('BookingController', 'index');
