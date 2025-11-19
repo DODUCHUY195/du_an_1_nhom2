@@ -33,7 +33,7 @@ function deletefile($filePath){
 }
 
 function active($route) {
-    $current = $_GET['route'] ?? '/';
+    $current = $_GET['route'] ?? '/dashboard';
     return $current === $route 
         ? "font-bold text-blue-600 bg-blue-100" 
         : "text-slate-600 hover:text-blue-600";
