@@ -1,4 +1,3 @@
-
 <?php
 // DEV: hiển thị lỗi tạm thời để debug
 ini_set('display_errors', 1);
@@ -15,10 +14,6 @@ define('APP_PATH', __DIR__); // nếu file đang ở /app/admin thì APP_PATH ->
 // require các file chung
 require_once APP_PATH . '/commons/env.php';
 require_once APP_PATH . '/commons/function.php';
-
-
-
-
 
 // ----- require tất cả models -----
 $models = [
@@ -40,15 +35,14 @@ foreach ($models as $mFile) {
 
 // ----- require tất cả controllers -----
 $controllers = [
-
     APP_PATH . '/controllers/BookingController.php',
     APP_PATH . '/controllers/AuthController.php',
-    APP_PATH . '/controllers/BookingController.php',
     APP_PATH . '/controllers/CategoryController.php',
     APP_PATH . '/controllers/GuideController.php',
     APP_PATH . '/controllers/HomeController.php',
     APP_PATH . '/controllers/ScheduleController.php',
     APP_PATH . '/controllers/TourController.php',
+    APP_PATH . '/controllers/AdminBookingController.php',
 ];
 
 foreach ($controllers as $cFile) {
@@ -58,12 +52,7 @@ foreach ($controllers as $cFile) {
     require_once $cFile;
 }
 
-// tiếp phần route...
-
-
 // ====== ROUTE: lấy từ query string, fallback /home ======
-// gọi url như: index.php?route=/tours/create
-
 $route = $_GET['route'] ?? null;
 if ($route === null) {
     $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -115,7 +104,6 @@ switch ($route) {
         callController('TourController', 'create');
         break;
     case '/tours/edit':
-        // lấy id từ GET: index.php?route=/tours/edit&id=123
         $id = $_GET['id'] ?? null;
         callController('TourController', 'edit', [$id]);
         break;
@@ -157,6 +145,10 @@ switch ($route) {
     case '/categories/editForm':
         callController('CategoryController', 'editForm');
         break;
+    case '/categories/delete':
+        callController('CategoryController', 'delete');
+        break;
+
     case '/bookings':
         callController('BookingController', 'index');
         break;
@@ -168,7 +160,6 @@ switch ($route) {
         callController('AdminBookingController', 'index');
         break;
     case '/admin/bookings/update':
-        // update status thường nên dùng POST; lấy id/status từ POST
         callController('AdminBookingController', 'updateStatus', [$_POST ?? []]);
         break;
 
