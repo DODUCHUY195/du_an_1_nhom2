@@ -9,10 +9,10 @@ define('DB_USERNAME','root');
 
 define('DB_PASSWORD','');
 
+// Merged: mặc định để du_an_11 - nếu cần test trên DB khác thì thay 'du_an_test'
 define('DB_NAME','du_an_11');
 
 define('PATH_ROOT', __DIR__ . '/../');
 
 define('PATH_VIEW', __DIR__ . '/../views');
-
 ?>
