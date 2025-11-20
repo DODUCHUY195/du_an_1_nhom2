@@ -1,7 +1,7 @@
 <?php
 class Tour extends BaseModel
 {
-   public function getAllTour()
+   public function getTour()
     {
         try {
             $sql = 'SELECT * FROM tour';

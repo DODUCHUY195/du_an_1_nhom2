@@ -46,7 +46,7 @@ class CategoryController
 
 public function postEdit(){
         if($_SERVER['REQUEST_METHOD']== 'POST'){
-            $id = $_POST['category_id'] ?? null;
+            $id = $_POST['category_id'];
             $ten_danh_muc = $_POST['category_name'] ?? null;
             $mo_ta = $_POST['description'] ?? null;
             $errors = [];
@@ -54,14 +54,14 @@ public function postEdit(){
                 $errors['category_name']='Tên danh mục không đc để trống';
             }
 
-            
+            if(empty($errors)){
                 $this->modelDanhMuc->updateDanhMuc($id,$ten_danh_muc,$mo_ta);
                 header("Location: ". BASE_URL . '?route=/categories' );
                 exit();
-            
+            }else{
                 $danhMuc = ['category_id'=>$id, 'category_name'=>$ten_danh_muc,'description'=>$mo_ta];
                  require_once './views/category/editForm.php';
-           
+            }
         }
        
     }

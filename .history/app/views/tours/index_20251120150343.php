@@ -39,21 +39,7 @@
 
                   <tr>
 
-                    <?php foreach ($listDanhMuc as $key => $danhMuc): ?>
-                  <tr>
-                    <td><?= $key + 1 ?></td>
-                    <td><?= $danhMuc['category_name'] ?></td>
                     
-                    <td><?= $danhMuc['description'] ?></td>
-                    <td>
-                      <a class="btn btn-primary" href="<?= BASE_URL . '?route=/categories/editForm&category_id='. $danhMuc['category_id'] ?>">
-                        Sua
-                      </a>
-                      <a class="btn btn-danger" href="" onclick="return confirm('Bạn có đồng ý xoá không')"><i class="fas fa-trash-alt"></i>Xoa</a>
-
-                    </td>
-                  </tr>
-                <?php endforeach ?>
 
                 </tr>
 

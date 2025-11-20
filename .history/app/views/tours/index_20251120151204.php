@@ -22,25 +22,28 @@
                     <th class="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
                       STT
                     </th>
-                    <!-- <th class="px-6 py-3 pl-2 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
+                    <th class="px-6 py-3 pl-2 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
                       Mã tour
-                    </th> -->
-                    <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
-                      Tên tour
                     </th>
                     <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
-                      Giá
+                      Danh Mục
                     </th>
                     <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
-                      Duration_day
+                      Danh Mục
                     </th>
                     <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
-                      Mô tả
+                      Danh Mục
                     </th>
                     <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
-                      Trạng thái
+                      Danh Mục
+                    </th>
+                    <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
+                      Danh Mục
                     </th>
 
+                    <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
+                      Danh Mục
+                    </th>
                     <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
                       Thao tác
                     </th>
@@ -52,22 +55,14 @@
 
                   <tr>
 
-                    <?php foreach ($listTour as $key => $tour): ?>
+                    <?php foreach ($listDanhMuc as $key => $danhMuc): ?>
                   <tr>
                     <td><?= $key + 1 ?></td>
-                    <!-- <td><?= $tour['tour_code '] ?></td> -->
+                    <td><?= $danhMuc['category_name'] ?></td>
                     
-                    <td><?= $tour['tour_name'] ?></td>
-                    <td><?= $tour['price'] ?></td>
-                    
-                    <td><?= $tour['duration_days'] ?></td>
-                    <td><?= $tour['description'] ?></td>
-                    
-                    <td><?= $tour['status'] ?></td>
-              
-                    
+                    <td><?= $danhMuc['description'] ?></td>
                     <td>
-                      <a class="btn btn-primary" href="">
+                      <a class="btn btn-primary" href="<?= BASE_URL . '?route=/categories/editForm' ?>">
                         Sua
                       </a>
                       <a class="btn btn-danger" href="" onclick="return confirm('Bạn có đồng ý xoá không')"><i class="fas fa-trash-alt"></i>Xoa</a>

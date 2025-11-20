@@ -1,10 +1,10 @@
 <?php
 class Tour extends BaseModel
 {
-   public function getAllTour()
+   public function getTour()
     {
         try {
-            $sql = 'SELECT * FROM tour';
+            $sql = 'SELECT * FROM category';
             $stmt = $this->db->prepare($sql);
             $stmt->execute();
             return $stmt->fetchAll();

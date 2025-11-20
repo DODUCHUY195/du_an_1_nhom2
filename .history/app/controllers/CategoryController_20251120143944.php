@@ -37,31 +37,31 @@ class CategoryController
     }
     public function editForm()
     {
-        $id = $_GET['category_id'];
+        $id = $_GET['id_danh_muc'];
         $danhMuc = $this->modelDanhMuc->getDetailDanhMuc($id);
 
             require_once './views/category/editForm.php';
         
     }
 
-public function postEdit(){
+public function postEditDanhMuc(){
         if($_SERVER['REQUEST_METHOD']== 'POST'){
-            $id = $_POST['category_id'] ?? null;
-            $ten_danh_muc = $_POST['category_name'] ?? null;
-            $mo_ta = $_POST['description'] ?? null;
+            $id = $_POST['category_id'];
+            $ten_danh_muc = $_POST['category_name'];
+            $mo_ta = $_POST['description'];
             $errors = [];
             if(empty($ten_danh_muc)){
                 $errors['category_name']='Tên danh mục không đc để trống';
             }
 
-            
+            if(empty($errors)){
                 $this->modelDanhMuc->updateDanhMuc($id,$ten_danh_muc,$mo_ta);
-                header("Location: ". BASE_URL . '?route=/categories' );
+                header("Location: ". BASE_URL . '?route=/category' );
                 exit();
-            
-                $danhMuc = ['category_id'=>$id, 'category_name'=>$ten_danh_muc,'description'=>$mo_ta];
+            }else{
+                $danhMuc = ['id'=>$id, 'category_name'=>$ten_danh_muc,'description'=>$mo_ta];
                  require_once './views/category/editForm.php';
-           
+            }
         }
        
     }

@@ -8,7 +8,6 @@ class TourController
     }
     public function index()
     {
-         $listTour = $this->modelTour->getAllTour();
         require_once './views/tours/index.php';
     }
     public function create()

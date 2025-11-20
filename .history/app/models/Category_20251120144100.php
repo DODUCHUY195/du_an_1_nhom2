@@ -51,9 +51,9 @@ class Category extends BaseModel
             $sql = 'UPDATE  category SET category_name = :category_name,description = :description WHERE category_id = :category_id';
             $stmt = $this->db->prepare($sql);
             $stmt->execute([
-                ':category_id' => $id,
-                ':category_name' => $ten_danh_muc,
-                ':description' => $mo_ta,
+                ':id' => $id,
+                ':ten_danh_muc' => $ten_danh_muc,
+                ':mo_ta' => $mo_ta,
 
             ]);
             return true;

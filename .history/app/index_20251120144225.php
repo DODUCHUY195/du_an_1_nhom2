@@ -151,7 +151,7 @@ switch ($route) {
     case '/categories/postAdd':
         callController('CategoryController', 'postAdd');
         break;
-    case '/categories/postEdit':
+    case '/categories/edit':
         callController('CategoryController', 'postEdit');
         break;
     case '/categories/editForm':

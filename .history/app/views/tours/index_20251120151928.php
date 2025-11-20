@@ -55,7 +55,7 @@
                     <?php foreach ($listTour as $key => $tour): ?>
                   <tr>
                     <td><?= $key + 1 ?></td>
-                    <!-- <td><?= $tour['tour_code '] ?></td> -->
+                    <td><?= $tour['tour_code '] ?></td>
                     
                     <td><?= $tour['tour_name'] ?></td>
                     <td><?= $tour['price'] ?></td>

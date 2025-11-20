@@ -1,16 +1,10 @@
 <?php
 class Tour extends BaseModel
 {
-   public function getAllTour()
+    public function all()
     {
-        try {
-            $sql = 'SELECT * FROM tour';
-            $stmt = $this->db->prepare($sql);
-            $stmt->execute();
-            return $stmt->fetchAll();
-        } catch (Exception $e) {
-            echo 'loi' . $e->getMessage();
-        }
+        $stmt = $this->db->query('SELECT t.*, c.category_name FROM tour t LEFT JOIN category c ON t.category_id = c.category_id ORDER BY t.created_at DESC');
+        return $stmt->fetchAll();
     }
     public function find($id)
     {

@@ -22,9 +22,9 @@
                     <th class="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
                       STT
                     </th>
-                    <!-- <th class="px-6 py-3 pl-2 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
+                    <th class="px-6 py-3 pl-2 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
                       Mã tour
-                    </th> -->
+                    </th>
                     <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
                       Tên tour
                     </th>
@@ -52,18 +52,18 @@
 
                   <tr>
 
-                    <?php foreach ($listTour as $key => $tour): ?>
+                    <?php foreach ($listTour as $key => $danhMuc): ?>
                   <tr>
                     <td><?= $key + 1 ?></td>
-                    <!-- <td><?= $tour['tour_code '] ?></td> -->
+                    <td><?= $danhMuc['tour_code '] ?></td>
                     
-                    <td><?= $tour['tour_name'] ?></td>
-                    <td><?= $tour['price'] ?></td>
+                    <td><?= $danhMuc['tour_name'] ?></td>
+                    <td><?= $danhMuc['price'] ?></td>
                     
-                    <td><?= $tour['duration_days'] ?></td>
-                    <td><?= $tour['description'] ?></td>
+                    <td><?= $danhMuc['duration_days'] ?></td>
+                    <td><?= $danhMuc['description'] ?></td>
                     
-                    <td><?= $tour['status'] ?></td>
+                    <td><?= $danhMuc['status'] ?></td>
               
                     
                     <td>

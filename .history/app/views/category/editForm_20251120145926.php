@@ -9,10 +9,8 @@
     <div class="w-full p-6 mx-auto">
         <h2>Sua danh muc</h2>
         <form action="<?= BASE_URL . '?route=/categories/postEdit' ?>" method="POST">
-            <input type="hidden" name="category_id" value="<?= $danhMuc['category_id'] ?>">
-
-        <div class="mb-4">
-                <input name="category_name" type="text" placeholder="" class="focus:shadow-primary-outline dark:bg-gray-950 dark:placeholder:text-white/80 dark:text-white/80 text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding p-3 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-fuchsia-300 focus:outline-none" value="<?= $danhMuc['category_name'] ?>" />
+            <div class="mb-4">
+                <input type="text" placeholder="" class="focus:shadow-primary-outline dark:bg-gray-950 dark:placeholder:text-white/80 dark:text-white/80 text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding p-3 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-fuchsia-300 focus:outline-none" value="<?= $danhMuc['category_name'] ?>" />
             </div>
             <div class="mb-4">
                 <textarea name="description" id="" class="focus:shadow-primary-outline dark:bg-gray-950 dark:placeholder:text-white/80 dark:text-white/80 text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding p-3 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-fuchsia-300 focus:outline-none" placeholder="Nhập mô tả"><?= $danhMuc['description'] ?></textarea>
