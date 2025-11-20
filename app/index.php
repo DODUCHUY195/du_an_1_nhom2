@@ -1,4 +1,3 @@
-
 <?php
 // DEV: hiển thị lỗi tạm thời để debug
 ini_set('display_errors', 1);
@@ -10,15 +9,11 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 // định nghĩa APP_PATH trỏ tới /app
-define('APP_PATH', __DIR__);// nếu file đang ở /app/admin thì APP_PATH -> .../du_an_11/app
+define('APP_PATH', __DIR__); // nếu file đang ở /app/admin thì APP_PATH -> .../du_an_11/app
 
 // require các file chung
 require_once APP_PATH . '/commons/env.php';
 require_once APP_PATH . '/commons/function.php';
-
-
-
-
 
 // ----- require tất cả models -----
 $models = [
@@ -42,12 +37,12 @@ foreach ($models as $mFile) {
 $controllers = [
     APP_PATH . '/controllers/BookingController.php',
     APP_PATH . '/controllers/AuthController.php',
-    APP_PATH . '/controllers/BookingController.php',
     APP_PATH . '/controllers/CategoryController.php',
     APP_PATH . '/controllers/GuideController.php',
     APP_PATH . '/controllers/HomeController.php',
     APP_PATH . '/controllers/ScheduleController.php',
     APP_PATH . '/controllers/TourController.php',
+    APP_PATH . '/controllers/AdminBookingController.php',
 ];
 
 foreach ($controllers as $cFile) {
@@ -57,12 +52,7 @@ foreach ($controllers as $cFile) {
     require_once $cFile;
 }
 
-// tiếp phần route...
-
-
 // ====== ROUTE: lấy từ query string, fallback /home ======
-// gọi url như: index.php?route=/tours/create
-
 $route = $_GET['route'] ?? null;
 if ($route === null) {
     $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -72,13 +62,16 @@ if ($route === null) {
 $route = $route === '' ? '/home' : $route;
 
 // Hàm helper: an toàn gọi controller->method
-function callController($class, $method = 'index', $params = []) {
+function callController($class, $method = 'index', $params = [])
+{
     if (!class_exists($class)) {
-        echo "Controller class '{$class}' không tồn tại."; return;
+        echo "Controller class '{$class}' không tồn tại.";
+        return;
     }
     $c = new $class();
     if (!method_exists($c, $method)) {
-        echo "Method '{$method}' không tồn tại trong {$class}."; return;
+        echo "Method '{$method}' không tồn tại trong {$class}.";
+        return;
     }
     call_user_func_array([$c, $method], $params);
 }
@@ -111,7 +104,6 @@ switch ($route) {
         callController('TourController', 'create');
         break;
     case '/tours/edit':
-        // lấy id từ GET: index.php?route=/tours/edit&id=123
         $id = $_GET['id'] ?? null;
         callController('TourController', 'edit', [$id]);
         break;
@@ -141,8 +133,17 @@ switch ($route) {
     case '/categories':
         callController('CategoryController', 'index');
         break;
-    case '/categories/create':
-        callController('CategoryController', 'create');
+    case '/categories/addForm':
+        callController('CategoryController', 'addForm');
+        break;
+    case '/categories/postAdd':
+        callController('CategoryController', 'postAdd');
+        break;
+    case '/categories/postEdit':
+        callController('CategoryController', 'postEdit');
+        break;
+    case '/categories/editForm':
+        callController('CategoryController', 'editForm');
         break;
     case '/categories/delete':
         callController('CategoryController', 'delete');
@@ -159,7 +160,6 @@ switch ($route) {
         callController('AdminBookingController', 'index');
         break;
     case '/admin/bookings/update':
-        // update status thường nên dùng POST; lấy id/status từ POST
         callController('AdminBookingController', 'updateStatus', [$_POST ?? []]);
         break;
 
