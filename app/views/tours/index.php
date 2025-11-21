@@ -70,8 +70,12 @@
                       <a class="btn btn-primary" href="">
                         Sua
                       </a>
-                      <a class="btn btn-danger" href="" onclick="return confirm('Bạn có đồng ý xoá không')"><i class="fas fa-trash-alt"></i>Xoa</a>
-
+                      <form method="post" action="<?= BASE_URL . '?route=/tours/delete' ?>" onsubmit="return confirm('Bạn chắc chắn muốn xóa tour này?');">
+                        <input type="hidden" name="tour_id" value="<?= htmlspecialchars($tour['tour_id']) ?>">
+                        <button class="btn btn-danger" type="submit">
+                          <i class="fas fa-trash-alt"></i> Xoa
+                        </button>
+                      </form>
                     </td>
                   </tr>
                 <?php endforeach ?>

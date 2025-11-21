@@ -29,4 +29,14 @@ class Tour extends BaseModel
         $stmt = $this->db->prepare('UPDATE tour SET category_id=:category_id,tour_code=:tour_code,tour_name=:tour_name,price=:price,duration_days=:duration_days,description=:description,status=:status WHERE tour_id=:id');
         return $stmt->execute($data);
     }
+
+    public function delete($id)
+    {
+        try {
+            $stmt = $this->db->prepare('DELETE FROM tour WHERE tour_id = :id');
+            return $stmt->execute([':id' => $id]);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

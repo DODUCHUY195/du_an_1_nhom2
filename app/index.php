@@ -107,6 +107,9 @@ switch ($route) {
         $id = $_GET['id'] ?? null;
         callController('TourController', 'edit', [$id]);
         break;
+    case '/tours/delete':
+        callController('TourController', 'delete', [$_POST ?? []]);
+        break;
 
     case '/schedules':
         callController('ScheduleController', 'index');
