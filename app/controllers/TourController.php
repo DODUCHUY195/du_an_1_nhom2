@@ -8,15 +8,76 @@ class TourController
     }
     public function index()
     {
-         $listTour = $this->modelTour->getAllTour();
+        $listTour = $this->modelTour->getAllTour();
         require_once './views/tours/index.php';
     }
-    public function create()
+
+    public function postAdd()
     {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    
+            $ten = $_POST['tour_name'];
+            $gia = $_POST['price'];
+            $duration = $_POST['duration_days'];
+            $mo_ta = $_POST['description'];
+            $trang_thai = $_POST['status'];
+            $thoi_gian_tao = $_POST['created_at'];
+
+            $errors = [];
+
+
+
+            $this->modelTour->insertTour($ten,$gia,$duration, $mo_ta,$trang_thai,$thoi_gian_tao);
+            header("Location: " . BASE_URL . '?route=/tours');
+            exit();
+
+            require_once './views/tour/addForm.php';
+        }
+    }
+
+     public function editForm()
+    {
+        $id = $_GET['tour_id'];
+        $danhMuc = $this->modelTour->getDetailTour($id);
+        require_once './views/tours/editForm.php';
+    }
+
+    public function postEdit(){
+        if($_SERVER['REQUEST_METHOD']== 'POST'){
+            $id = $_POST['tour_id'];
+           $ten = $_POST['tour_name'];
+            $gia = $_POST['price'];
+            $duration = $_POST['duration_days'];
+            $mo_ta = $_POST['description'];
+            $trang_thai = $_POST['status'];
+            $thoi_gian_tao = $_POST['created_at'];
+            $errors = [];
+            if(empty($ten_danh_muc)){
+                $errors['category_name']='Tên danh mục không đc để trống';
+            }
+
+            
+                $this->modelTour->updateTour($id,$ten,$gia,$duration, $mo_ta,$trang_thai,$thoi_gian_tao);
+                header("Location: ". BASE_URL . '?route=/categories' );
+                exit();
+            
+                $Tour = ['Tour_id'=>$id, 'tour_name'=>$ten,'price'=>$gia,'duration_days'=>$duration,'description'=>$mo_ta,'status'=>$trang_thai,'created_at'=>$thoi_gian_tao];
+                 require_once './views/tours/editForm.php';
+           
+        }
+       
+    }
+
+    
+
+    public function addForm()
+    {
+        
+
         require_once './views/tours/addForm.php';
     }
 
-    public function edit() {
+  
 
-    }
+  
 }

@@ -111,13 +111,17 @@ switch ($route) {
     case '/tours':
         callController('TourController', 'index');
         break;
-    case '/tours/create':
-        callController('TourController', 'create');
+    case '/tours/addForm':
+        callController('TourController', 'addForm');
         break;
-    case '/tours/edit':
-        // lấy id từ GET: index.php?route=/tours/edit&id=123
-        $id = $_GET['id'] ?? null;
-        callController('TourController', 'edit', [$id]);
+    case '/tours/postAdd':
+        callController('TourController', 'postAdd');
+        break;
+    case '/tours/editForm':
+        callController('TourController', 'editForm');
+        break;
+    case '/tours/postEdit':
+        callController('TourController', 'postEdit');
         break;
 
     case '/schedules':
