@@ -7,7 +7,7 @@
   <?php require_once  "./views/layouts/admin/navbar.php"; ?>
 
   <div class="w-full px-6 py-6 mx-auto">
-    <h2><a href="<?= BASE_URL . '?route=/categories/addForm' ?>">Them danh muc</a></h2>
+    <h2><a href="<?= BASE_URL . '?route=/categories/addForm' ?>">Thêm danh mục</a></h2>
     <div class="flex flex-wrap -mx-3">
       <div class="flex-none w-full max-w-full px-3">
         <div class="relative flex flex-col min-w-0 mb-6 break-words bg-white border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">

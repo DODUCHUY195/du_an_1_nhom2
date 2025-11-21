@@ -7,7 +7,7 @@
   <?php require_once  "./views/layouts/admin/navbar.php"; ?>
 
   <div class="w-full px-6 py-6 mx-auto">
-    <h2><a href="<?= BASE_URL . '?route=/tours/addForm' ?>">Them Tour</a></h2>
+    <h2><a href="<?= BASE_URL . '?route=/tours/addForm' ?>">Thêm Tour</a></h2>
     <div class="flex flex-wrap -mx-3">
       <div class="flex-none w-full max-w-full px-3">
         <div class="relative flex flex-col min-w-0 mb-6 break-words bg-white border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
@@ -40,6 +40,9 @@
                     <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
                       Trạng thái
                     </th>
+                    <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
+                      Ngày tạo
+                    </th>
 
                     <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
                       Thao tác
@@ -64,6 +67,7 @@
                     <td><?= $tour['description'] ?></td>
                     
                     <td><?= $tour['status'] ?></td>
+                    <td><?= $tour['created_at'] ?></td>
               
                     
                     <td>
