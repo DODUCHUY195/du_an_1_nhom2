@@ -1,7 +1,7 @@
 <?php
 class Category extends BaseModel
 {
-    public function getAllDanhMuc()
+    public function getAllCategory()
     {
         try {
             $sql = 'SELECT * FROM category';
@@ -11,6 +11,11 @@ class Category extends BaseModel
         } catch (Exception $e) {
             echo 'loi' . $e->getMessage();
         }
+    }
+    
+    public function getAllDanhMuc()
+    {
+        return $this->getAllCategory();
     }
 
      public function getDetailDanhMuc($id)
@@ -60,6 +65,18 @@ class Category extends BaseModel
         } catch (Exception $e) {
             echo 'loi' . $e->getMessage();
         }
+    }
+
+    public function delete($id)
+    {
+        $sql = "DELETE FROM category WHERE category_id = :id";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([':id' => $id]);
+    }
+
+    public function deleteDanhMuc($id)
+    {
+        return $this->delete($id);
     }
 
 }

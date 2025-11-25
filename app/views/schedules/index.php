@@ -1,16 +1,167 @@
-<h2>Schedules</h2>
-<p><a href="/schedules/create">Tạo lịch khởi hành</a></p>
-<table border="1" cellpadding="6">
-<tr><th>ID</th><th>Tour</th><th>Depart date</th><th>Seats total</th><th>Seats booked</th><th>Status</th><th>Action</th></tr>
-<?php foreach($schedules as $s): ?>
-<tr>
-  <td><?=htmlspecialchars($s['schedule_id'])?></td>
-  <td><?=htmlspecialchars($s['tour_name'])?></td>
-  <td><?=htmlspecialchars($s['depart_date'])?></td>
-  <td><?=htmlspecialchars($s['seats_total'])?></td>
-  <td><?=htmlspecialchars($s['seats_booked'])?></td>
-  <td><?=htmlspecialchars($s['status'])?></td>
-  <td><a href="/schedules/edit/<?=htmlspecialchars($s['schedule_id'])?>">Edit</a></td>
-</tr>
-<?php endforeach; ?>
-</table>
+<?php require_once APP_PATH . "/views/layouts/admin/header.php"; ?>
+<?php require_once APP_PATH . "/views/layouts/admin/sidebar.php"; ?>
+
+<main class="relative h-full max-h-screen transition-all xl:ml-68 rounded-xl">
+    <?php require_once APP_PATH . "/views/layouts/admin/navbar.php"; ?>
+    
+    <div class="w-full p-6 mx-auto">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold">Danh sách lịch trình</h2>
+            <div class="flex space-x-2">
+                <a href="<?= BASE_URL . '?route=/schedules/operationDashboard' ?>" 
+                   class="bg-green-500 hover:bg-green-700 text-black font-bold py-2 px-4 rounded">
+                    Điều hành tour
+                </a>
+                <a href="<?= BASE_URL . '?route=/schedules/addForm' ?>" 
+                   class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    Thêm lịch trình
+                </a>
+            </div>
+        </div>
+        
+        <!-- Advanced Search Form -->
+        <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+            <h3 class="text-lg font-semibold mb-4">Tìm kiếm nâng cao</h3>
+            <form method="GET" action="<?= BASE_URL ?>">
+                <input type="hidden" name="route" value="/schedules">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div>
+                        <label class="block mb-2 font-semibold">Tour</label>
+                        <select name="tour_id" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">Tất cả tour</option>
+                            <?php foreach($tours as $tour): ?>
+                                <option value="<?= $tour['tour_id'] ?>" <?= (isset($_GET['tour_id']) && $_GET['tour_id'] == $tour['tour_id']) ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($tour['tour_name']) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block mb-2 font-semibold">Trạng thái</label>
+                        <select name="status" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">Tất cả trạng thái</option>
+                            <option value="pending" <?= (isset($_GET['status']) && $_GET['status'] == 'pending') ? 'selected' : '' ?>>Chờ xử lý</option>
+                            <option value="open" <?= (isset($_GET['status']) && $_GET['status'] == 'open') ? 'selected' : '' ?>>Mở</option>
+                            <option value="completed" <?= (isset($_GET['status']) && $_GET['status'] == 'completed') ? 'selected' : '' ?>>Đã hoàn thành</option>
+                            <option value="cancelled" <?= (isset($_GET['status']) && $_GET['status'] == 'cancelled') ? 'selected' : '' ?>>Đã hủy</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block mb-2 font-semibold">Tìm kiếm</label>
+                        <input type="text" name="search" value="<?= isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '' ?>" placeholder="Tên tour hoặc điểm gặp" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    
+                    <div class="flex items-end">
+                        <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            Tìm kiếm
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+        <div class="bg-white rounded-xl shadow-md p-6">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">STT</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tour</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ngày khởi hành</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Điểm gặp</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Số ghế tổng</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Số ghế đã đặt</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Trạng thái</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    <?php foreach($list as $k => $s): ?>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap"><?= $k+1 ?></td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="font-medium text-gray-900"><?= $s['tour_name'] ?></div>
+                                <div class="text-sm text-gray-500"><?= $s['tour_code'] ?></div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap"><?= date('d/m/Y', strtotime($s['depart_date'])) ?></td>
+                            <td class="px-6 py-4 whitespace-nowrap"><?= $s['meeting_point'] ?></td>
+                            <td class="px-6 py-4 whitespace-nowrap"><?= $s['seats_total'] ?></td>
+                            <td class="px-6 py-4 whitespace-nowrap"><?= $s['seats_booked'] ?></td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                    <?= $s['status'] == 'open' ? 'bg-green-100 text-green-800' : 
+                                       ($s['status'] == 'cancelled' ? 'bg-red-100 text-red-800' : 
+                                       ($s['status'] == 'completed' ? 'bg-blue-100 text-blue-800' : 
+                                       'bg-yellow-100 text-yellow-800')) ?>">
+                                    <?= $s['status'] == 'open' ? 'Mở' : 
+                                       ($s['status'] == 'cancelled' ? 'Đã hủy' : 
+                                       ($s['status'] == 'completed' ? 'Đã hoàn thành' : 
+                                       'Chờ xử lý')) ?>
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                <a href="<?= BASE_URL.'?route=/schedules/detail&schedule_id='.$s['schedule_id'] ?>" 
+                                   class="text-indigo-600 hover:text-indigo-900 mr-3">Chi tiết</a>
+                                <a href="<?= BASE_URL.'?route=/schedules/editForm&schedule_id='.$s['schedule_id'] ?>" 
+                                   class="text-indigo-600 hover:text-indigo-900 mr-3">Sửa</a>
+                                <a href="<?= BASE_URL.'?route=/schedules/delete&schedule_id='.$s['schedule_id'] ?>" 
+                                   class="text-red-600 hover:text-red-900" 
+                                   onclick="return confirm('Bạn có chắc muốn xoá/ẩn?')">Xóa</a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+            
+            <!-- Pagination -->
+            <?php if ($totalPages > 1): ?>
+            <div class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6 mt-6">
+                <div class="flex flex-1 justify-between sm:hidden">
+                    <?php if ($page > 1): ?>
+                    <a href="?route=/schedules&page=<?= $page - 1 ?>&tour_id=<?= isset($_GET['tour_id']) ? $_GET['tour_id'] : '' ?>&status=<?= isset($_GET['status']) ? $_GET['status'] : '' ?>&search=<?= isset($_GET['search']) ? urlencode($_GET['search']) : '' ?>" class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Trước</a>
+                    <?php endif; ?>
+                    
+                    <?php if ($page < $totalPages): ?>
+                    <a href="?route=/schedules&page=<?= $page + 1 ?>&tour_id=<?= isset($_GET['tour_id']) ? $_GET['tour_id'] : '' ?>&status=<?= isset($_GET['status']) ? $_GET['status'] : '' ?>&search=<?= isset($_GET['search']) ? urlencode($_GET['search']) : '' ?>" class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Sau</a>
+                    <?php endif; ?>
+                </div>
+                <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+                    <div>
+                        <p class="text-sm text-gray-700">
+                            Hiển thị <span class="font-medium"><?= ($page - 1) * 5 + 1 ?></span> đến <span class="font-medium"><?= min($page * 5, $totalSchedules) ?></span> trong tổng số <span class="font-medium"><?= $totalSchedules ?></span> kết quả
+                        </p>
+                    </div>
+                    <div>
+                        <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
+                            <?php if ($page > 1): ?>
+                            <a href="?route=/schedules&page=<?= $page - 1 ?>&tour_id=<?= isset($_GET['tour_id']) ? $_GET['tour_id'] : '' ?>&status=<?= isset($_GET['status']) ? $_GET['status'] : '' ?>&search=<?= isset($_GET['search']) ? urlencode($_GET['search']) : '' ?>" class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
+                                <span class="sr-only">Trước</span>
+                                <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" />
+                                </svg>
+                            </a>
+                            <?php endif; ?>
+                            
+                            <?php for ($i = max(1, $page - 2); $i <= min($totalPages, $page + 2); $i++): ?>
+                            <a href="?route=/schedules&page=<?= $i ?>&tour_id=<?= isset($_GET['tour_id']) ? $_GET['tour_id'] : '' ?>&status=<?= isset($_GET['status']) ? $_GET['status'] : '' ?>&search=<?= isset($_GET['search']) ? urlencode($_GET['search']) : '' ?>" class="<?= $i == $page ? 'relative z-10 inline-flex items-center bg-indigo-600 px-4 py-2 text-sm font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600' : 'relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0' ?>"><?= $i ?></a>
+                            <?php endfor; ?>
+                            
+                            <?php if ($page < $totalPages): ?>
+                            <a href="?route=/schedules&page=<?= $page + 1 ?>&tour_id=<?= isset($_GET['tour_id']) ? $_GET['tour_id'] : '' ?>&status=<?= isset($_GET['status']) ? $_GET['status'] : '' ?>&search=<?= isset($_GET['search']) ? urlencode($_GET['search']) : '' ?>" class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
+                                <span class="sr-only">Sau</span>
+                                <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
+                                </svg>
+                            </a>
+                            <?php endif; ?>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <?php endif; ?>
+        </div>
+    </div>
+</main>
+
+<?php require_once APP_PATH . "/views/layouts/admin/footer.php"; ?>
