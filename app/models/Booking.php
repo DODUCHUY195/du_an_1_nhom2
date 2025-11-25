@@ -1,2 +1,37 @@
 <?php
-class Booking extends BaseModel { public function all(){ $stmt = $this->db->query('SELECT b.*, s.depart_date, t.tour_name, u.full_name FROM booking b JOIN tour_schedule s ON b.schedule_id=s.schedule_id JOIN tour t ON s.tour_id=t.tour_id JOIN users u ON b.customer_id=u.user_id ORDER BY b.created_at DESC'); return $stmt->fetchAll(); } public function create($data){ $stmt = $this->db->prepare('INSERT INTO booking (booking_code,schedule_id,customer_id,num_adults,num_children,total_amount,deposit_amount,status) VALUES(:booking_code,:schedule_id,:customer_id,:num_adults,:num_children,:total_amount,:deposit_amount,:status)'); return $stmt->execute($data); } }
+class Booking extends BaseModel
+{
+    protected $table = 'booking';
+
+    public function getAll()
+    {
+        $sql = "SELECT * FROM {$this->table} ORDER BY booking_id DESC";
+        return $this->db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getById($id)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM {$this->table} WHERE booking_id=?");
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function create($customer_id, $schedule_id, $total_amount)
+    {
+        $stmt = $this->db->prepare("INSERT INTO {$this->table} (customer_id,schedule_id,total_amount,status,booking_date) VALUES (?,?,?, 'pending', NOW())");
+        $stmt->execute([$customer_id,$schedule_id,$total_amount]);
+        return $this->db->lastInsertId();
+    }
+
+    public function updateStatus($booking_id, $status)
+    {
+        $stmt = $this->db->prepare("UPDATE {$this->table} SET status=? WHERE booking_id=?");
+        return $stmt->execute([$status,$booking_id]);
+    }
+
+    public function updateDeposit($booking_id, $deposit)
+    {
+        $stmt = $this->db->prepare("UPDATE {$this->table} SET deposit=? WHERE booking_id=?");
+        return $stmt->execute([$deposit,$booking_id]);
+    }
+}

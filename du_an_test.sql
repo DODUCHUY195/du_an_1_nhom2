@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th10 17, 2025 lúc 11:50 AM
+-- Thời gian đã tạo: Th10 24, 2025 lúc 01:47 PM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.2.12
 
@@ -70,7 +70,9 @@ CREATE TABLE `category` (
 
 INSERT INTO `category` (`category_id`, `category_name`, `description`) VALUES
 (1, 'ABC', 'ok'),
-(2, 'abc', 'ok');
+(2, 'abc', 'ok'),
+(3, 'Gbao', 'nnnn'),
+(4, 'bbbbb', 'giay2');
 
 -- --------------------------------------------------------
 
@@ -102,6 +104,19 @@ CREATE TABLE `guide` (
 -- --------------------------------------------------------
 
 --
+-- Cấu trúc bảng cho bảng `guide_assignment`
+--
+
+CREATE TABLE `guide_assignment` (
+  `assignment_id` bigint(20) UNSIGNED NOT NULL,
+  `guide_id` bigint(20) UNSIGNED NOT NULL,
+  `schedule_id` bigint(20) UNSIGNED NOT NULL,
+  `assigned_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Cấu trúc bảng cho bảng `special_note`
 --
 
@@ -121,14 +136,29 @@ CREATE TABLE `special_note` (
 CREATE TABLE `tour` (
   `tour_id` bigint(20) UNSIGNED NOT NULL,
   `category_id` int(11) DEFAULT NULL,
-  `tour_code` varchar(50) NOT NULL,
+  `tour_code` varchar(50) DEFAULT NULL,
   `tour_name` varchar(200) NOT NULL,
   `price` decimal(10,2) NOT NULL,
-  `duration_days` int(11) DEFAULT NULL,
+  `start_date` date DEFAULT NULL,
+  `end_date` date DEFAULT NULL,
   `description` text DEFAULT NULL,
-  `status` varchar(20) DEFAULT 'draft',
+  `image` varchar(255) DEFAULT NULL,
+  `status` enum('draft','pending_approval','active','inactive','suspended','cancelled','completed') DEFAULT 'draft',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Thêm ràng buộc kiểm tra ngày
+ALTER TABLE `tour` 
+ADD CONSTRAINT chk_date CHECK (end_date IS NULL OR end_date >= start_date);
+
+--
+-- Đang đổ dữ liệu cho bảng `tour`
+--
+
+INSERT INTO `tour` (`tour_id`, `category_id`, `tour_code`, `tour_name`, `price`, `start_date`, `end_date`, `description`, `status`, `created_at`) VALUES
+(7, NULL, 'TOUR20250007', 'Du lich Viet Nam', 10.00, '2025-12-01', '2025-12-05', 'Du lich', 'draft', '2025-11-24 10:00:00'),
+(26, NULL, 'TOUR20250026', 'hhh', 0.00, '2025-12-10', '2026-01-10', 'jj', 'active', '2025-11-21 18:32:50'),
+(27, NULL, 'TOUR20250027', 'aczx', 12331.00, '2025-12-15', '2025-12-15', 'sieu dzai', 'active', '2025-11-24 11:33:10');
 
 -- --------------------------------------------------------
 
@@ -159,10 +189,37 @@ CREATE TABLE `tour_schedule` (
   `meeting_point` varchar(200) DEFAULT NULL,
   `seats_total` int(11) DEFAULT 0,
   `seats_booked` int(11) DEFAULT 0,
-  `status` varchar(20) DEFAULT 'open'
+  `status` varchar(20) DEFAULT 'open',
+  `logs_approved` tinyint(4) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `tour_price`
+--
+
+CREATE TABLE `tour_price` (
+  `price_id` bigint(20) UNSIGNED NOT NULL,
+  `tour_id` int(11) DEFAULT NULL,
+  `season` varchar(50) DEFAULT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `start_date` date DEFAULT NULL,
+  `end_date` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `tour_image`
+--
+
+CREATE TABLE `tour_image` (
+  `image_id` bigint(20) UNSIGNED NOT NULL,
+  `tour_id` int(11) DEFAULT NULL,
+  `image_path` varchar(255) DEFAULT NULL,
+  `is_primary` tinyint(1) DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Cấu trúc bảng cho bảng `users`
@@ -178,6 +235,13 @@ CREATE TABLE `users` (
   `activated` tinyint(1) DEFAULT 0,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `users`
+--
+
+INSERT INTO `users` (`user_id`, `full_name`, `email`, `phone`, `password`, `role`, `activated`, `created_at`) VALUES
+(2, 'Nguyen Gia Bao', 'Gbao@gmail.com', '23456780000', '$2y$10$77ip/TKmi0X/EevnggvHVumoF3D8cV8VNCbMXobRg9xP5YbJyBuPK', 'user', 1, '2025-11-17 17:55:53');
 
 --
 -- Chỉ mục cho các bảng đã đổ
@@ -214,6 +278,12 @@ ALTER TABLE `guide`
   ADD PRIMARY KEY (`guide_id`);
 
 --
+-- Chỉ mục cho bảng `guide_assignment`
+--
+ALTER TABLE `guide_assignment`
+  ADD PRIMARY KEY (`assignment_id`);
+
+--
 -- Chỉ mục cho bảng `special_note`
 --
 ALTER TABLE `special_note`
@@ -237,6 +307,18 @@ ALTER TABLE `tour_passenger`
 --
 ALTER TABLE `tour_schedule`
   ADD PRIMARY KEY (`schedule_id`);
+
+--
+-- Chỉ mục cho bảng `tour_price`
+--
+ALTER TABLE `tour_price`
+  ADD PRIMARY KEY (`price_id`);
+
+--
+-- Chỉ mục cho bảng `tour_image`
+--
+ALTER TABLE `tour_image`
+  ADD PRIMARY KEY (`image_id`);
 
 --
 -- Chỉ mục cho bảng `users`
@@ -265,7 +347,7 @@ ALTER TABLE `booking`
 -- AUTO_INCREMENT cho bảng `category`
 --
 ALTER TABLE `category`
-  MODIFY `category_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `category_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT cho bảng `daily_log`
@@ -280,6 +362,12 @@ ALTER TABLE `guide`
   MODIFY `guide_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT cho bảng `guide_assignment`
+--
+ALTER TABLE `guide_assignment`
+  MODIFY `assignment_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT cho bảng `special_note`
 --
 ALTER TABLE `special_note`
@@ -289,7 +377,7 @@ ALTER TABLE `special_note`
 -- AUTO_INCREMENT cho bảng `tour`
 --
 ALTER TABLE `tour`
-  MODIFY `tour_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `tour_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT cho bảng `tour_passenger`
@@ -304,10 +392,22 @@ ALTER TABLE `tour_schedule`
   MODIFY `schedule_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT cho bảng `tour_price`
+--
+ALTER TABLE `tour_price`
+  MODIFY `price_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT cho bảng `tour_image`
+--
+ALTER TABLE `tour_image`
+  MODIFY `image_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT cho bảng `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `user_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
