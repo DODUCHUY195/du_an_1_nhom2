@@ -1,4 +1,3 @@
-
 <?php
 // DEV: hiển thị lỗi tạm thời để debug
 ini_set('display_errors', 1);
@@ -16,16 +15,14 @@ define('APP_PATH', __DIR__); // nếu file đang ở /app/admin thì APP_PATH ->
 require_once APP_PATH . '/commons/env.php';
 require_once APP_PATH . '/commons/function.php';
 
-
-
-
-
 // ----- require tất cả models -----
 $models = [
     APP_PATH . '/models/BaseModel.php',
     APP_PATH . '/models/Booking.php',
     APP_PATH . '/models/Category.php',
+    APP_PATH . '/models/Daily_log.php',
     APP_PATH . '/models/Guide.php',
+    APP_PATH . '/models/GuideAssignment.php',
     APP_PATH . '/models/Schedule.php',
     APP_PATH . '/models/Tour.php',
     APP_PATH . '/models/User.php',
@@ -40,10 +37,8 @@ foreach ($models as $mFile) {
 
 // ----- require tất cả controllers -----
 $controllers = [
-
     APP_PATH . '/controllers/BookingController.php',
     APP_PATH . '/controllers/AuthController.php',
-    APP_PATH . '/controllers/BookingController.php',
     APP_PATH . '/controllers/CategoryController.php',
     APP_PATH . '/controllers/GuideController.php',
     APP_PATH . '/controllers/HomeController.php',
@@ -59,7 +54,6 @@ foreach ($controllers as $cFile) {
 }
 
 // tiếp phần route...
-
 
 // ====== ROUTE: lấy từ query string, fallback /home ======
 // gọi url như: index.php?route=/tours/create
@@ -123,29 +117,24 @@ switch ($route) {
     case '/tours/postEdit':
         callController('TourController', 'postEdit');
         break;
-
-    case '/schedules':
-        callController('ScheduleController', 'index');
+    case '/tours/delete':
+        $tour_id = $_GET['tour_id'] ?? null;
+        if ($tour_id) {
+            callController('TourController', 'delete', [$tour_id]);
+        }
         break;
-    case '/schedules/create':
-        callController('ScheduleController', 'create');
+        
+    case '/tours/detail':
+        callController('TourController', 'detail');
         break;
-    case '/schedules/edit':
-        $id = $_GET['id'] ?? null;
-        callController('ScheduleController', 'edit', [$id]);
+        
+    case '/tours/updateStatus':
+        callController('TourController', 'updateStatus');
         break;
-
-    case '/guides':
-        callController('GuideController', 'index');
-        break;
-    case '/guides/create':
-        callController('GuideController', 'create');
-        break;
-    case '/guides/edit':
-        $id = $_GET['id'] ?? null;
-        callController('GuideController', 'edit', [$id]);
-        break;
-
+        
+    // ============================
+    // ROUTE CATEGORY
+    // ============================
     case '/categories':
         callController('CategoryController', 'index');
         break;
@@ -155,27 +144,85 @@ switch ($route) {
     case '/categories/postAdd':
         callController('CategoryController', 'postAdd');
         break;
-    case '/categories/postEdit':
-        callController('CategoryController', 'postEdit');
-        break;
     case '/categories/editForm':
         callController('CategoryController', 'editForm');
         break;
-    case '/bookings':
-        callController('BookingController', 'index');
+    case '/categories/postEdit':
+        callController('CategoryController', 'postEdit');
         break;
-    case '/bookings/create':
-        callController('BookingController', 'create');
-        break;
-
-    case '/admin/bookings':
-        callController('AdminBookingController', 'index');
-        break;
-    case '/admin/bookings/update':
-        // update status thường nên dùng POST; lấy id/status từ POST
-        callController('AdminBookingController', 'updateStatus', [$_POST ?? []]);
+    case '/categories/delete':
+        callController('CategoryController', 'delete');
         break;
 
+    // ============================
+    // ROUTE SCHEDULE (LỊCH KHỞI HÀNH)
+    // ============================
+
+    // 1) CRUD LỊCH TRÌNH
+    case '/schedules':
+        $controller = new ScheduleController();
+        $controller->index();
+        break;
+        
+    case '/schedules/operationDashboard':
+        $controller = new ScheduleController();
+        $controller->operationDashboard();
+        break;
+        
+    case '/schedules/detail':
+        $controller = new ScheduleController();
+        $controller->detail();
+        break;
+        
+    case '/schedules/addForm':
+        callController('ScheduleController', 'addForm');
+        break;
+
+    case '/schedules/postAdd':
+        callController('ScheduleController', 'postAdd');
+        break;
+
+    case '/schedules/editForm':
+        callController('ScheduleController', 'editForm');
+        break;
+
+    case '/schedules/postEdit':
+        callController('ScheduleController', 'postEdit');
+        break;
+
+    case '/schedules/delete':
+        callController('ScheduleController', 'delete');
+        break;
+    // 2) CHI TIẾT TOUR – ĐIỀU HÀNH
+    case '/schedules/detail':
+        callController('ScheduleController', 'detail');
+        break;
+    // 3) PHÂN CÔNG HDV
+    case '/schedules/assignGuideForm':
+        callController('ScheduleController', 'assignGuideForm');
+        break;
+
+    case '/schedules/postAssignGuide':
+        callController('ScheduleController', 'postAssignGuide');
+        break;
+
+    case '/schedules/removeGuide':
+        callController('ScheduleController', 'removeGuide');
+        break;
+
+
+    // 4) NHẬT KÝ
+    case '/schedules/dailyLog':
+        callController('ScheduleController', 'dailyLog');
+        break;
+
+    case '/schedules/addDailyLog':
+        callController('ScheduleController', 'addDailyLog');
+        break;
+        
     default:
-        echo "<h1>Welcome</h1><p><a href='?route=/tours'>Tours</a></p>";
+        // 404 - Page not found
+        http_response_code(404);
+        echo "404 - Page not found";
+        break;
 }
