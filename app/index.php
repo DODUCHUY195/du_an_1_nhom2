@@ -43,13 +43,14 @@ $controllers = [
 
     APP_PATH . '/controllers/BookingController.php',
     APP_PATH . '/controllers/AuthController.php',
-    APP_PATH . '/controllers/BookingController.php',
+    APP_PATH . '/controllers/AdminBookingController.php', // <<< THÊM DÒNG NÀY
     APP_PATH . '/controllers/CategoryController.php',
     APP_PATH . '/controllers/GuideController.php',
     APP_PATH . '/controllers/HomeController.php',
     APP_PATH . '/controllers/ScheduleController.php',
     APP_PATH . '/controllers/TourController.php',
 ];
+
 
 foreach ($controllers as $cFile) {
     if (!file_exists($cFile)) {
