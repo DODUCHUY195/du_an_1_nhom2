@@ -35,6 +35,11 @@
                     </div>
                     
                     <div>
+                        <label class="block mb-2 font-semibold">Ngày trở về</label>
+                        <input type="date" name="return_date" value="<?= isset($schedule['return_date']) ? $schedule['return_date'] : '' ?>" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    
+                    <div>
                         <label class="block mb-2 font-semibold">Điểm gặp</label>
                         <input type="text" name="meeting_point" value="<?= $schedule['meeting_point'] ?>" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
@@ -52,11 +57,29 @@
                     <div>
                         <label class="block mb-2 font-semibold">Trạng thái</label>
                         <select name="status" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <option value="pending" <?= $schedule['status']=='pending'?'selected':'' ?>>Pending</option>
-                            <option value="completed" <?= $schedule['status']=='completed'?'selected':'' ?>>Completed</option>
-                            <option value="cancelled" <?= $schedule['status']=='cancelled'?'selected':'' ?>>Cancelled</option>
-                            <option value="open" <?= $schedule['status']=='open'?'selected':'' ?>>Open</option>
+                            <option value="pending" <?= $schedule['status']=='pending'?'selected':'' ?>>Chờ xử lý</option>
+                            <option value="completed" <?= $schedule['status']=='completed'?'selected':'' ?>>Đã hoàn thành</option>
+                            <option value="cancelled" <?= $schedule['status']=='cancelled'?'selected':'' ?>>Đã hủy</option>
+                            <option value="open" <?= $schedule['status']=='open'?'selected':'' ?>>Mở</option>
                         </select>
+                    </div>
+                    
+                    <!-- Guide Assignment Field -->
+                    <div>
+                        <label class="block mb-2 font-semibold">Hướng dẫn viên</label>
+                        <select name="guide_id" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">Chọn hướng dẫn viên</option>
+                            <?php foreach($guides as $guide): ?>
+                                <option value="<?= $guide['guide_id'] ?>" <?= (isset($assignedGuide['guide_id']) && $assignedGuide['guide_id'] == $guide['guide_id']) ? 'selected' : '' ?>>
+                                    <?= $guide['guide_name'] ?><?= !empty($guide['license_no']) ? ' (' . $guide['license_no'] . ')' : '' ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                        <?php if (!empty($assignedGuide)): ?>
+                            <div class="mt-2 text-sm text-gray-500">
+                                Hiện tại: <?= $assignedGuide['guide_name'] ?><?= !empty($assignedGuide['license_no']) ? ' (' . $assignedGuide['license_no'] . ')' : '' ?>
+                            </div>
+                        <?php endif; ?>
                     </div>
                 </div>
                 

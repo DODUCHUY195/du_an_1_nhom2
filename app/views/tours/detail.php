@@ -42,12 +42,8 @@
                             <p><?= number_format($tour['price'], 0, ',', '.') ?> VNĐ</p>
                         </div>
                         <div>
-                            <label class="font-semibold">Ngày bắt đầu:</label>
-                            <p><?= $tour['start_date'] ? date('d/m/Y', strtotime($tour['start_date'])) : 'Chưa xác định' ?></p>
-                        </div>
-                        <div>
-                            <label class="font-semibold">Ngày kết thúc:</label>
-                            <p><?= $tour['end_date'] ? date('d/m/Y', strtotime($tour['end_date'])) : 'Chưa xác định' ?></p>
+                            <label class="font-semibold">Số ngày:</label>
+                            <p><?= isset($tour['duration_days']) && $tour['duration_days'] > 0 ? $tour['duration_days'] . ' ngày' : 'Chưa xác định' ?></p>
                         </div>
                         <div>
                             <label class="font-semibold">Ngày tạo:</label>
@@ -60,10 +56,12 @@
                             $statusBadgeClass = $tourModel->getStatusBadgeClass($tour['status']);
                             $statusLabel = $tourModel->getStatusOptions()[$tour['status']] ?? 'Không xác định';
                             ?>
-                            <span class="px-3 py-1 rounded-full text-sm font-medium <?= $statusBadgeClass ?>">
-                                <?= $statusLabel ?>
-                            </span>
-                            <p class="text-sm text-gray-600 mt-1">
+                            <div class="mt-1">
+                                <span class="inline-block px-3 py-1 rounded-full text-sm font-medium <?= $statusBadgeClass ?>">
+                                    <?= $statusLabel ?>
+                                </span>
+                            </div>
+                            <p class="text-sm text-gray-600 mt-2">
                                 <?= $tourModel->getStatusDescription($tour['status']) ?>
                             </p>
                         </div>
@@ -84,48 +82,12 @@
                 <div class="bg-white rounded-xl shadow-md p-6 mb-6">
                     <h3 class="text-lg font-bold mb-4">Hình ảnh</h3>
                     <?php if (!empty($tour['image'])): ?>
-                        <img src="<?= BASE_URL ?>../<?= $tour['image'] ?>" alt="Tour Image" class="w-full h-48 object-cover rounded-lg">
+                        <img src="<?= BASE_URL ?>../<?= $tour['image'] ?>" alt="Tour Image" class="w-full max-w-xs h-auto object-contain rounded-lg mx-auto">
                     <?php else: ?>
-                        <div class="w-full h-48 bg-gray-200 rounded-lg flex items-center justify-center">
+                        <div class="w-full max-w-xs h-48 bg-gray-200 rounded-lg flex items-center justify-center mx-auto">
                             <span class="text-gray-500">Không có hình ảnh</span>
                         </div>
                     <?php endif; ?>
-                </div>
-                
-                <!-- Status Actions -->
-                <div class="bg-white rounded-xl shadow-md p-6 mb-6">
-                    <h3 class="text-lg font-bold mb-4">Hành động trạng thái</h3>
-                    <div class="space-y-3">
-                        <?php 
-                        $tourModel = new Tour();
-                        $currentStatus = $tour['status'];
-                        $statusOptions = $tourModel->getStatusOptions();
-                        ?>
-                        
-                        <?php if ($currentStatus != 'active'): ?>
-                        <button onclick="updateStatus('active')" class="w-full bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded text-sm">
-                            Kích hoạt tour
-                        </button>
-                        <?php endif; ?>
-                        
-                        <?php if ($currentStatus != 'inactive'): ?>
-                        <button onclick="updateStatus('inactive')" class="w-full bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded text-sm">
-                            Ngừng hoạt động
-                        </button>
-                        <?php endif; ?>
-                        
-                        <?php if ($currentStatus != 'suspended'): ?>
-                        <button onclick="updateStatus('suspended')" class="w-full bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded text-sm">
-                            Tạm ngưng
-                        </button>
-                        <?php endif; ?>
-                        
-                        <?php if ($currentStatus != 'cancelled'): ?>
-                        <button onclick="updateStatus('cancelled')" class="w-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-sm">
-                            Hủy tour
-                        </button>
-                        <?php endif; ?>
-                    </div>
                 </div>
                 
                 <!-- Related Information -->

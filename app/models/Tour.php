@@ -109,18 +109,17 @@ class Tour extends BaseModel
         return $code;
     }
 
-    public function insertTour($name, $code, $price, $start_date, $end_date, $description, $status, $category_id = null, $image = null)
+    public function insertTour($name, $code, $price, $duration_days, $description, $status, $category_id = null, $image = null)
     {
-        $sql = "INSERT INTO tour (tour_name, tour_code, price, start_date, end_date, description, status, category_id, image)
-                VALUES (:name, :code, :price, :start_date, :end_date, :description, :status, :category_id, :image)";
+        $sql = "INSERT INTO tour (tour_name, tour_code, price, duration_days, description, status, category_id, image)
+                VALUES (:name, :code, :price, :duration_days, :description, :status, :category_id, :image)";
 
         $stm = $this->db->prepare($sql);
         $stm->execute([
             ':name' => $name,
             ':code' => $code,
             ':price' => $price,
-            ':start_date' => $start_date,
-            ':end_date' => $end_date,
+            ':duration_days' => $duration_days,
             ':description' => $description,
             ':status' => $status,
             ':category_id' => $category_id,
@@ -130,35 +129,47 @@ class Tour extends BaseModel
         return $this->db->lastInsertId();
     }
 
-    public function updateTour($id, $ten, $gia, $start_date, $end_date, $mo_ta, $trang_thai, $category_id, $image = null)
+    public function updateTour($id, $ten, $gia, $duration_days, $mo_ta, $trang_thai, $category_id, $image = null)
     {
         // Debug: Log the parameters
         error_log("updateTour called with ID: " . $id);
         error_log("Parameters: " . json_encode(func_get_args()));
         
+        // Xây dựng câu lệnh SQL động tùy theo có ảnh mới hay không
         $sql = "UPDATE tour 
                 SET tour_name = :tour_name,
                     price = :price,
-                    start_date = :start_date,
-                    end_date = :end_date,
+                    duration_days = :duration_days,
                     description = :description,
                     status = :status,
-                    category_id = :category_id,
-                    image = :image
-                WHERE tour_id = :tour_id";
+                    category_id = :category_id";
+        
+        // Chỉ thêm image vào câu lệnh nếu có giá trị
+        if ($image !== null) {
+            $sql .= ", image = :image";
+        }
+        
+        $sql .= " WHERE tour_id = :tour_id";
 
         $stmt = $this->db->prepare($sql);
-        $result = $stmt->execute([
+        
+        // Chuẩn bị mảng tham số
+        $params = [
             ':tour_name' => $ten,
             ':price' => $gia,
-            ':start_date' => $start_date,
-            ':end_date' => $end_date,
+            ':duration_days' => $duration_days,
             ':description' => $mo_ta,
             ':status' => $trang_thai,
             ':category_id' => $category_id,
-            ':image' => $image,
             ':tour_id' => $id
-        ]);
+        ];
+        
+        // Chỉ thêm image vào mảng tham số nếu có giá trị
+        if ($image !== null) {
+            $params[':image'] = $image;
+        }
+        
+        $result = $stmt->execute($params);
         
         // Debug: Log the result
         error_log("updateTour result: " . ($result ? "success" : "failed"));
@@ -167,63 +178,13 @@ class Tour extends BaseModel
         return $result;
     }
     
+    
     // Xóa hẳn tour
     public function deleteTour($id)
     {
         $sql = "DELETE FROM tour WHERE tour_id = :id";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':id' => $id]);
-    }
-    
-    // Lấy giá theo mùa cho tour
-    public function getTourPrices($tour_id) {
-        $sql = "SELECT * FROM tour_price WHERE tour_id = :tour_id ORDER BY start_date";
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute([':tour_id' => $tour_id]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-    
-    // Thêm giá theo mùa
-    public function addTourPrice($tour_id, $season, $price, $start_date, $end_date) {
-        error_log("Adding tour price: tour_id=$tour_id, season=$season, price=$price, start_date=$start_date, end_date=$end_date");
-        $sql = "INSERT INTO tour_price (tour_id, season, price, start_date, end_date) 
-                VALUES (:tour_id, :season, :price, :start_date, :end_date)";
-        $stmt = $this->db->prepare($sql);
-        $result = $stmt->execute([
-            ':tour_id' => $tour_id,
-            ':season' => $season,
-            ':price' => $price,
-            ':start_date' => $start_date,
-            ':end_date' => $end_date
-        ]);
-        error_log("Add tour price result: " . ($result ? "success" : "failed"));
-        return $result;
-    }
-    
-    // Cập nhật giá theo mùa
-    public function updateTourPrice($price_id, $season, $price, $start_date, $end_date) {
-        error_log("Updating tour price: price_id=$price_id, season=$season, price=$price, start_date=$start_date, end_date=$end_date");
-        $sql = "UPDATE tour_price 
-                SET season = :season, price = :price, start_date = :start_date, end_date = :end_date 
-                WHERE price_id = :price_id";
-        $stmt = $this->db->prepare($sql);
-        $result = $stmt->execute([
-            ':price_id' => $price_id,
-            ':season' => $season,
-            ':price' => $price,
-            ':start_date' => $start_date,
-            ':end_date' => $end_date
-        ]);
-        error_log("Update tour price result: " . ($result ? "success" : "failed"));
-        error_log("Affected rows: " . $stmt->rowCount());
-        return $result;
-    }
-    
-    // Xóa giá theo mùa
-    public function deleteTourPrice($price_id) {
-        $sql = "DELETE FROM tour_price WHERE price_id = :price_id";
-        $stmt = $this->db->prepare($sql);
-        return $stmt->execute([':price_id' => $price_id]);
     }
     
     // Lấy hình ảnh cho tour

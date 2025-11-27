@@ -67,11 +67,14 @@
                 <thead class="bg-gray-50">
                     <tr>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">STT</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ảnh</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tour</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ngày khởi hành</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ngày trở về</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Điểm gặp</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Số ghế tổng</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Số ghế đã đặt</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">HDV</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Trạng thái</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Thao tác</th>
                     </tr>
@@ -81,13 +84,42 @@
                         <tr>
                             <td class="px-6 py-4 whitespace-nowrap"><?= $k+1 ?></td>
                             <td class="px-6 py-4 whitespace-nowrap">
+                                <?php if (!empty($s['image'])): ?>
+                                    <img src="<?= BASE_URL ?>../<?= $s['image'] ?>" alt="Tour Image" class="w-16 h-16 object-cover rounded">
+                                <?php else: ?>
+                                    <div class="w-16 h-16 bg-gray-200 rounded flex items-center justify-center">
+                                        <span class="text-gray-500 text-xs">No Image</span>
+                                    </div>
+                                <?php endif; ?>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="font-medium text-gray-900"><?= $s['tour_name'] ?></div>
                                 <div class="text-sm text-gray-500"><?= $s['tour_code'] ?></div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap"><?= date('d/m/Y', strtotime($s['depart_date'])) ?></td>
+                            <td class="px-6 py-4 whitespace-nowrap"><?= isset($s['return_date']) ? date('d/m/Y', strtotime($s['return_date'])) : 'Chưa xác định' ?></td>
                             <td class="px-6 py-4 whitespace-nowrap"><?= $s['meeting_point'] ?></td>
                             <td class="px-6 py-4 whitespace-nowrap"><?= $s['seats_total'] ?></td>
                             <td class="px-6 py-4 whitespace-nowrap"><?= $s['seats_booked'] ?></td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <?php if (!empty($s['guide_name'])): ?>
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                        <?= $s['guide_name'] ?>
+                                    </span>
+                                    <br>
+                                    <a href="<?= BASE_URL.'?route=/schedules/removeGuide&id='.$s['assigned_guide_id'].'&schedule_id='.$s['schedule_id'] ?>" 
+                                       class="text-red-600 hover:text-red-900 text-xs"
+                                       onclick="return confirm('Bạn có chắc muốn hủy phân công HDV này?')">
+                                        Hủy
+                                    </a>
+                                <?php else: ?>
+                                    <!-- Button to open assign guide modal -->
+                                    <button onclick="openAssignModal(<?= $s['schedule_id'] ?>)" 
+                                            class="text-indigo-600 hover:text-indigo-900 text-xs">
+                                        Phân công
+                                    </button>
+                                <?php endif; ?>
+                            </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
                                     <?= $s['status'] == 'open' ? 'bg-green-100 text-green-800' : 
@@ -162,6 +194,59 @@
             <?php endif; ?>
         </div>
     </div>
+    
+    <!-- Assign Guide Modal -->
+    <div id="assignGuideModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-xl w-1/3">
+            <div class="px-6 py-4 border-b">
+                <h3 class="text-lg font-medium text-gray-900">Phân công hướng dẫn viên</h3>
+            </div>
+            <form id="assignGuideForm" method="GET" action="<?= BASE_URL ?>">
+                <input type="hidden" name="route" value="/schedules/assignGuideFromList">
+                <input type="hidden" name="schedule_id" id="schedule_id_input">
+                <div class="px-6 py-4">
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Chọn hướng dẫn viên</label>
+                        <select name="guide_id" id="guideSelect" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">Chọn hướng dẫn viên</option>
+                            <?php foreach($guides as $guide): ?>
+                                <option value="<?= $guide['guide_id'] ?>"><?= $guide['full_name'] ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="px-6 py-4 border-t bg-gray-50 flex justify-end space-x-3">
+                    <button type="button" onclick="closeAssignModal()" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Hủy
+                    </button>
+                    <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Phân công
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 </main>
+
+<script>
+    function openAssignModal(scheduleId) {
+        document.getElementById('schedule_id_input').value = scheduleId;
+        document.getElementById('assignGuideModal').classList.remove('hidden');
+        document.getElementById('assignGuideModal').classList.add('flex');
+    }
+    
+    function closeAssignModal() {
+        document.getElementById('assignGuideModal').classList.add('hidden');
+        document.getElementById('assignGuideModal').classList.remove('flex');
+    }
+    
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+        const modal = document.getElementById('assignGuideModal');
+        if (event.target === modal) {
+            closeAssignModal();
+        }
+    }
+</script>
 
 <?php require_once APP_PATH . "/views/layouts/admin/footer.php"; ?>

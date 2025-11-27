@@ -21,8 +21,8 @@ class DailyLog extends BaseModel
     // Thêm nhật ký ngày
     public function addLog($guide_id, $schedule_id, $content)
     {
-        $sql = "INSERT INTO daily_log (guide_id, schedule_id, content, created_at) 
-                VALUES (?, ?, ?, NOW())";
+        $sql = "INSERT INTO daily_log (guide_id, schedule_id, log_date, content) 
+                VALUES (?, ?, CURDATE(), ?)";
 
         $stm = $this->db->prepare($sql);
         return $stm->execute([$guide_id, $schedule_id, $content]);

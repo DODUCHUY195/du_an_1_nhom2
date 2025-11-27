@@ -53,6 +53,11 @@
                     </div>
                     
                     <div>
+                        <label class="block mb-2 font-semibold">Ngày trở về</label>
+                        <input type="date" name="return_date" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    
+                    <div>
                         <label class="block mb-2 font-semibold">Điểm gặp</label>
                         <input type="text" name="meeting_point" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
@@ -62,13 +67,32 @@
                         <input type="number" name="seats_total" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                     
+                    <!-- Add booked seats field -->
+                    <div>
+                        <label class="block mb-2 font-semibold">Số ghế đã đặt</label>
+                        <input type="number" name="seats_booked" value="0" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    
                     <div>
                         <label class="block mb-2 font-semibold">Trạng thái</label>
                         <select name="status" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <option value="pending">Pending</option>
-                            <option value="completed">Completed</option>
-                            <option value="cancelled">Cancelled</option>
-                            <option value="open">Open</option>
+                            <option value="pending">Chờ xử lý</option>
+                            <option value="completed">Đã hoàn thành</option>
+                            <option value="cancelled">Đã hủy</option>
+                            <option value="open" selected>Mở</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Add guide selection field -->
+                    <div>
+                        <label class="block mb-2 font-semibold">Hướng dẫn viên</label>
+                        <select name="guide_id" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">Chọn hướng dẫn viên</option>
+                            <?php foreach($guides as $guide): ?>
+                                <option value="<?= $guide['guide_id'] ?>">
+                                    <?= $guide['guide_name'] ?><?= !empty($guide['license_no']) ? ' (' . $guide['license_no'] . ')' : '' ?>
+                                </option>
+                            <?php endforeach; ?>
                         </select>
                     </div>
                 </div>

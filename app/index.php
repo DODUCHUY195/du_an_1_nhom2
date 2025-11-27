@@ -210,6 +210,10 @@ switch ($route) {
         callController('ScheduleController', 'removeGuide');
         break;
 
+    // New route for assigning guide from schedule listing
+    case '/schedules/assignGuideFromList':
+        callController('ScheduleController', 'assignGuideFromList');
+        break;
 
     // 4) NHẬT KÝ
     case '/schedules/dailyLog':

@@ -117,10 +117,7 @@
                       Giá
                     </th>
                     <th class="px-6 py-3 font-bold text-center uppercase align-middle text-xs tracking-none whitespace-nowrap text-slate-400 opacity-70">
-                      Ngày bắt đầu
-                    </th>
-                    <th class="px-6 py-3 font-bold text-center uppercase align-middle text-xs tracking-none whitespace-nowrap text-slate-400 opacity-70">
-                      Ngày kết thúc
+                      Số ngày
                     </th>
                     <th class="px-6 py-3 font-bold text-center uppercase align-middle text-xs tracking-none whitespace-nowrap text-slate-400 opacity-70">
                       Ngày tạo
@@ -140,7 +137,7 @@
                       <td class="px-6 py-3 text-sm"><?= $key + 1 + ($page - 1) * 5 ?></td>
                       <td class="px-6 py-3">
                         <?php if (!empty($tour['image'])): ?>
-                          <img src="<?= BASE_URL . '../' . $tour['image'] ?>" alt="Tour Image" class="w-16 h-16 object-cover rounded shadow">
+                          <img src="<?= BASE_URL ?>../<?= $tour['image'] ?>" alt="Tour Image" class="w-16 h-16 object-cover rounded shadow">
                         <?php else: ?>
                           <div class="w-16 h-16 bg-gray-200 rounded flex items-center justify-center shadow">
                             <span class="text-gray-500 text-xs">No Image</span>
@@ -151,8 +148,7 @@
                       <td class="px-6 py-3 text-sm"><?= $tour['tour_name'] ?></td>
                       <td class="px-6 py-3 text-sm text-center"><?= $tour['category_name'] ?? 'Chưa phân loại' ?></td>
                       <td class="px-6 py-3 text-sm text-center font-medium"><?= number_format($tour['price'], 0, ',', '.') ?> VNĐ</td>
-                      <td class="px-6 py-3 text-sm text-center"><?= $tour['start_date'] ? date('d/m/Y', strtotime($tour['start_date'])) : 'Chưa xác định' ?></td>
-                      <td class="px-6 py-3 text-sm text-center"><?= $tour['end_date'] ? date('d/m/Y', strtotime($tour['end_date'])) : 'Chưa xác định' ?></td>
+                      <td class="px-6 py-3 text-sm text-center"><?= $tour['duration_days'] ? $tour['duration_days'] . ' ngày' : 'Chưa xác định' ?></td>
                       <td class="px-6 py-3 text-sm text-center"><?= date('d/m/Y', strtotime($tour['created_at'])) ?></td>
                       <td class="px-6 py-3 text-center">
                         <?php 

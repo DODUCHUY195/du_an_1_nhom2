@@ -32,6 +32,10 @@ class ScheduleController
         $tourModel = new Tour();
         $tours = $tourModel->getAllTour();
         
+        // Get all guides for assignment
+        $guideModel = new Guide();
+        $guides = $guideModel->all();
+        
         require "./views/schedules/index.php";
     }
     // Form thêm schedule
@@ -39,6 +43,11 @@ class ScheduleController
     {
         $tourModel = new Tour();
         $tours = $tourModel->getAllTour();
+        
+        // Get all guides for assignment
+        $guideModel = new Guide();
+        $guides = $guideModel->all();
+
         require "./views/schedules/addForm.php";
     }
 
@@ -48,14 +57,22 @@ class ScheduleController
         $data = [
             'tour_id'       => $_POST['tour_id'],
             'depart_date'   => $_POST['depart_date'],
+            'return_date'   => $_POST['return_date'] ?? null,
             'meeting_point' => $_POST['meeting_point'],
             'seats_total'   => $_POST['seats_total'],
-            'seats_booked'  => 0,
+            'seats_booked'  => $_POST['seats_booked'],
             'status'        => 'pending'
         ];
 
         $model = new Schedule();
-        $model->create($data);
+        $schedule_id = $model->create($data);
+        
+        // Handle guide assignment if provided and schedule was created successfully
+        if ($schedule_id && isset($_POST['guide_id']) && !empty($_POST['guide_id'])) {
+            $guide_id = $_POST['guide_id'];
+            $assign = new GuideAssignment();
+            $assign->assignGuide($schedule_id, $guide_id);
+        }
 
         header("Location: ?route=/schedules");
     }
@@ -70,6 +87,14 @@ class ScheduleController
 
         $tourModel = new Tour();
         $tours = $tourModel->getAllTour();
+        
+        // Get all guides for assignment
+        $guideModel = new Guide();
+        $guides = $guideModel->all();
+        
+        // Get currently assigned guide
+        $assign = new GuideAssignment();
+        $assignedGuide = $assign->getAssignedGuide($schedule_id);
 
         require "./views/schedules/editForm.php";
     }
@@ -82,6 +107,7 @@ class ScheduleController
         $data = [
             'tour_id'       => $_POST['tour_id'],
             'depart_date'   => $_POST['depart_date'],
+            'return_date'   => $_POST['return_date'] ?? null,
             'meeting_point' => $_POST['meeting_point'],
             'seats_total'   => $_POST['seats_total'],
             'seats_booked'  => $_POST['seats_booked'],
@@ -90,6 +116,31 @@ class ScheduleController
 
         $model = new Schedule();
         $model->update($schedule_id, $data);
+        
+        // Handle guide assignment/unassignment
+        if (isset($_POST['guide_id'])) {
+            $guide_id = $_POST['guide_id'];
+            $assign = new GuideAssignment();
+            
+            if (!empty($guide_id)) {
+                // Assign new guide
+                $assign->assignGuide($schedule_id, $guide_id);
+            } else {
+                // Unassign current guide if exists
+                $assigned = $assign->getAssignedGuide($schedule_id);
+                if ($assigned) {
+                    // Get the assignment ID to remove it
+                    // Since getAssignedGuide returns the assignment details, we need to get the assignment_id
+                    // Let's modify our approach to get all assignments for this schedule
+                    $assignments = $assign->getBySchedule($schedule_id);
+                    if (!empty($assignments)) {
+                        foreach ($assignments as $assignment) {
+                            $assign->remove($assignment['assignment_id']);
+                        }
+                    }
+                }
+            }
+        }
 
         header("Location: ?route=/schedules");
     }
@@ -183,7 +234,21 @@ class ScheduleController
         $assign = new GuideAssignment();
         $assign->remove($id);
 
-        header("Location: ?route=/schedules/detail&schedule_id=" . $schedule_id);
+        // Redirect back to the schedule listing instead of detail page
+        header("Location: ?route=/schedules");
+    }
+
+    // Assign guide directly from schedule listing
+    public function assignGuideFromList()
+    {
+        $schedule_id = $_GET['schedule_id'];
+        $guide_id = $_GET['guide_id'];
+
+        $assign = new GuideAssignment();
+        $assign->assignGuide($schedule_id, $guide_id);
+
+        // Redirect back to the schedule listing
+        header("Location: ?route=/schedules");
     }
 
 

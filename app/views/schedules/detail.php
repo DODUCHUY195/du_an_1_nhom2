@@ -14,10 +14,22 @@
         </div>
         
         <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+            <h3 class="text-lg font-semibold mb-4">Thông tin tour</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                    <h3 class="text-lg font-semibold mb-4">Thông tin tour</h3>
                     <div class="space-y-3">
+                        <div>
+                            <label class="font-medium">Ảnh tour:</label>
+                            <div class="mt-1">
+                                <?php if (!empty($schedule['image'])): ?>
+                                    <img src="<?= BASE_URL ?>../<?= $schedule['image'] ?>" alt="Tour Image" class="w-32 h-32 object-cover rounded">
+                                <?php else: ?>
+                                    <div class="w-32 h-32 bg-gray-200 rounded flex items-center justify-center">
+                                        <span class="text-gray-500 text-sm">No Image</span>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
                         <div>
                             <label class="font-medium">Mã tour:</label>
                             <p><?= $schedule['tour_code'] ?></p>
@@ -30,6 +42,15 @@
                             <label class="font-medium">Ngày khởi hành:</label>
                             <p><?= date('d/m/Y', strtotime($schedule['depart_date'])) ?></p>
                         </div>
+                        <div>
+                            <label class="font-medium">Ngày trở về:</label>
+                            <p><?= isset($schedule['return_date']) && $schedule['return_date'] ? date('d/m/Y', strtotime($schedule['return_date'])) : 'Chưa xác định' ?></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="space-y-3">
                         <div>
                             <label class="font-medium">Điểm gặp:</label>
                             <p><?= $schedule['meeting_point'] ?></p>
@@ -53,35 +74,34 @@
                         </div>
                     </div>
                 </div>
-                
-                <div>
-                    <h3 class="text-lg font-semibold mb-4">Hướng dẫn viên</h3>
-                    <?php if ($assignedGuide): ?>
-                        <div class="border rounded-lg p-4">
-                            <div class="flex items-center">
-                                <div class="bg-gray-200 border-2 border-dashed rounded-xl w-16 h-16" />
-                                <div class="ml-4">
-                                    <p class="font-medium"><?= htmlspecialchars($assignedGuide['guide_name']) ?></p>
-                                    <p class="text-sm text-gray-600">ID: <?= $assignedGuide['guide_id'] ?></p>
-                                    <p class="text-sm text-gray-600">Số bằng lái: <?= $assignedGuide['license_no'] ?? 'N/A' ?></p>
-                                </div>
-                            </div>
-                            <div class="mt-4">
-                                <a href="<?= BASE_URL.'?route=/schedules/assignGuideForm&schedule_id='.$schedule['schedule_id'] ?>" 
-                                   class="text-indigo-600 hover:text-indigo-900 text-sm">Thay đổi HDV</a>
-                            </div>
-                        </div>
-                    <?php else: ?>
-                        <div class="border border-dashed border-gray-300 rounded-lg p-6 text-center">
-                            <p class="text-gray-500 mb-4">Chưa phân công hướng dẫn viên</p>
-                            <a href="<?= BASE_URL.'?route=/schedules/assignGuideForm&schedule_id='.$schedule['schedule_id'] ?>" 
-                               class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                Phân công HDV
-                            </a>
-                        </div>
-                    <?php endif; ?>
-                </div>
             </div>
+        </div>
+        
+        <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+            <h3 class="text-lg font-semibold mb-4">Hướng dẫn viên</h3>
+            <?php if ($assignedGuide): ?>
+                <div class="border rounded-lg p-4">
+                    <div class="flex items-center">
+                        <div class="bg-gray-200 border-2 border-dashed rounded-xl w-16 h-16" />
+                        <div class="ml-4">
+                            <p class="font-medium"><?= htmlspecialchars($assignedGuide['guide_name']) ?></p>
+                            <!-- Removed ID and license number display as requested -->
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <a href="<?= BASE_URL.'?route=/schedules/assignGuideForm&schedule_id='.$schedule['schedule_id'] ?>" 
+                           class="text-indigo-600 hover:text-indigo-900 text-sm">Thay đổi HDV</a>
+                    </div>
+                </div>
+            <?php else: ?>
+                <div class="border border-dashed border-gray-300 rounded-lg p-6 text-center">
+                    <p class="text-gray-500 mb-4">Chưa phân công hướng dẫn viên</p>
+                    <a href="<?= BASE_URL.'?route=/schedules/assignGuideForm&schedule_id='.$schedule['schedule_id'] ?>" 
+                       class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        Phân công HDV
+                    </a>
+                </div>
+            <?php endif; ?>
         </div>
         
         <div class="bg-white rounded-xl shadow-md p-6">

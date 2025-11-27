@@ -1,7 +1,8 @@
 <?php
 class Guide extends BaseModel {
     public function all(){
-        $stmt = $this->db->query('SELECT g.*, u.full_name AS guide_name FROM guide g LEFT JOIN users u ON g.user_id = u.user_id ORDER BY g.created_at DESC');
+        // Fixed: Removed ORDER BY created_at since it doesn't exist in the guide table
+        $stmt = $this->db->query('SELECT g.*, u.full_name AS guide_name FROM guide g LEFT JOIN users u ON g.user_id = u.user_id');
         return $stmt->fetchAll();
     }
     public function find($id){

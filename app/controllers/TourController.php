@@ -13,16 +13,16 @@ class TourController
         // Get current page number
         $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
         $page = max(1, $page); // Ensure page is at least 1
-        
+
         // Items per page
         $itemsPerPage = 5;
-        
+
         // Get filter parameters
         $category_id = $_GET['category_id'] ?? '';
         $search = $_GET['search'] ?? '';
         $price_range = $_GET['price_range'] ?? '';
         $status = $_GET['status'] ?? '';
-        
+
         // Parse price range
         $min_price = '';
         $max_price = '';
@@ -33,13 +33,13 @@ class TourController
                 $max_price = $range[1];
             }
         }
-        
+
         // Get tours with pagination and filters
         $result = $this->modelTour->getToursWithFilters($category_id, $search, $min_price, $max_price, $status, $page, $itemsPerPage);
         $listTour = $result['tours'];
         $totalTours = $result['total'];
         $totalPages = ceil($totalTours / $itemsPerPage);
-        
+
         require_once APP_PATH . '/views/tours/index.php';
     }
 
@@ -48,11 +48,11 @@ class TourController
     {
         // Tạo mã tour tự động
         $tourCode = $this->modelTour->generateTourCode();
-        
+
         // Lấy danh sách category
         $categoryModel = new Category();
         $categories = $categoryModel->getAllCategory();
-        
+
         require_once APP_PATH . '/views/tours/addForm.php';
     }
 
@@ -68,6 +68,15 @@ class TourController
             $status = $_POST['status'];
             $category_id = $_POST['category_id'] ?? null;
             
+            // Calculate duration days from start and end dates
+            $duration_days = null;
+            if ($start_date && $end_date) {
+                $start = new DateTime($start_date);
+                $end = new DateTime($end_date);
+                $interval = $start->diff($end);
+                $duration_days = $interval->days + 1; // Include both start and end dates
+            }
+
             // Kiểm tra ngày bắt đầu không nhỏ hơn ngày hiện tại
             $current_date = date('Y-m-d');
             if (!$this->modelTour->validateTourDates($start_date, $current_date)) {
@@ -75,7 +84,7 @@ class TourController
                 echo "<script>alert('Ngày bắt đầu không hợp lệ! Ngày bắt đầu phải lớn hơn hoặc bằng ngày hiện tại.'); window.history.back();</script>";
                 return;
             }
-            
+
             // Kiểm tra ngày kết thúc không nhỏ hơn ngày bắt đầu
             if ($end_date && $start_date) {
                 $start = new DateTime($start_date);
@@ -85,7 +94,7 @@ class TourController
                     return;
                 }
             }
-            
+
             // Tạo mã tour tự động
             $code = $this->modelTour->generateTourCode();
 
@@ -96,16 +105,17 @@ class TourController
                 if (!is_dir($uploadDir)) {
                     mkdir($uploadDir, 0755, true);
                 }
-                
+
                 $fileName = uniqid() . '_' . basename($_FILES['image']['name']);
                 $targetFilePath = $uploadDir . $fileName;
-                
+
                 if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFilePath)) {
+                    // Sửa đường dẫn ảnh để lưu vào database
                     $image = 'uploads/tours/' . $fileName;
                 }
             }
 
-            $this->modelTour->insertTour($ten, $code, $gia, $start_date, $end_date, $mota, $status, $category_id, $image);
+            $this->modelTour->insertTour($ten, $code, $gia, $duration_days, $mota, $status, $category_id, $image);
 
             header("Location: " . BASE_URL . "?route=/tours");
             exit();
@@ -119,18 +129,19 @@ class TourController
         error_log("Loading edit form for tour ID: " . $id);
         $tour = $this->modelTour->getDetailTour($id);
         error_log("Tour data loaded: " . print_r($tour, true));
-        
+
         // Lấy danh sách category
         $categoryModel = new Category();
         $categories = $categoryModel->getAllCategory();
         error_log("Categories loaded: " . print_r($categories, true));
-        
-        // Lấy giá theo mùa và hình ảnh
-        $prices = $this->modelTour->getTourPrices($id);
+
+        // Lấy hình ảnh cho tour
         $images = $this->modelTour->getTourImages($id);
-        error_log("Prices loaded: " . print_r($prices, true));
         error_log("Images loaded: " . print_r($images, true));
-        
+
+        // Lấy giá theo mùa cho tour (nếu có)
+        $prices = []; // Tạm thời để trống, sẽ implement sau nếu cần
+
         require_once APP_PATH . '/views/tours/editForm.php';
     }
 
@@ -141,7 +152,7 @@ class TourController
         error_log("Request method: " . $_SERVER['REQUEST_METHOD']);
         error_log("POST data: " . print_r($_POST, true));
         error_log("FILES data: " . print_r($_FILES, true));
-        
+
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $id = $_POST['tour_id'];
             $ten = $_POST['tour_name'];
@@ -152,19 +163,28 @@ class TourController
             $trang_thai = $_POST['status'];
             $category_id = $_POST['category_id'] ?? null;
             
+            // Calculate duration days from start and end dates
+            $duration_days = null;
+            if ($start_date && $end_date) {
+                $start = new DateTime($start_date);
+                $end = new DateTime($end_date);
+                $interval = $start->diff($end);
+                $duration_days = $interval->days + 1; // Include both start and end dates
+            }
+
             error_log("Processing tour update for ID: " . $id);
-            
+
             // Kiểm tra ngày bắt đầu không nhỏ hơn ngày tạo
             $tour = $this->modelTour->getDetailTour($id);
             $created_at = $tour['created_at'];
-            
+
             if (!$this->modelTour->validateTourDates($start_date, $created_at)) {
                 error_log("Date validation failed for tour ID: " . $id);
                 // Hiển thị thông báo lỗi và quay lại form
                 echo "<script>alert('Ngày bắt đầu không hợp lệ! Ngày bắt đầu phải lớn hơn hoặc bằng ngày tạo tour.'); window.history.back();</script>";
                 return;
             }
-            
+
             // Kiểm tra ngày kết thúc không nhỏ hơn ngày bắt đầu
             if ($end_date && $start_date) {
                 $start = new DateTime($start_date);
@@ -175,10 +195,10 @@ class TourController
                     return;
                 }
             }
-            
+
             // Giữ nguyên mã tour cũ
             $code = $tour['tour_code'];
-            
+
             // Xử lý upload hình ảnh
             $image = $_POST['current_image'] ?? null;
             if (!empty($_FILES['image']['name'])) {
@@ -186,17 +206,17 @@ class TourController
                 if (!is_dir($uploadDir)) {
                     mkdir($uploadDir, 0755, true);
                 }
-                
+
                 $fileName = uniqid() . '_' . basename($_FILES['image']['name']);
                 $targetFilePath = $uploadDir . $fileName;
-                
+
                 if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFilePath)) {
                     $image = 'uploads/tours/' . $fileName;
                     error_log("Image uploaded: " . $image);
                 }
             }
 
-            $result = $this->modelTour->updateTour($id, $ten, $gia, $start_date, $end_date, $mo_ta, $trang_thai, $category_id, $image);
+            $result = $this->modelTour->updateTour($id, $ten, $gia, $duration_days, $mo_ta, $trang_thai, $category_id, $image);
             error_log("Update tour result: " . ($result ? "success" : "failed"));
 
             header("Location: " . BASE_URL . "?route=/tours");
@@ -209,22 +229,22 @@ class TourController
     {
         $id = $_GET['tour_id'];
         $tour = $this->modelTour->getDetailTour($id);
-        
+
         // Get related information
         $scheduleModel = new Schedule();
         $schedules = $scheduleModel->getByTourId($id);
         $scheduleCount = count($schedules);
-        
+
         // For demo purposes, we'll set some dummy values
         $bookingCount = 0;
         $totalRevenue = 0;
-        
+
         foreach ($schedules as $schedule) {
             // In a real implementation, you would count actual bookings
             $bookingCount += $schedule['seats_booked'];
             $totalRevenue += $schedule['seats_booked'] * $tour['price'];
         }
-        
+
         require_once APP_PATH . '/views/tours/detail.php';
     }
 
@@ -234,14 +254,14 @@ class TourController
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $tour_id = $_POST['tour_id'];
             $status = $_POST['status'];
-            
+
             try {
                 $this->modelTour->updateTourStatus($tour_id, $status);
                 $_SESSION['success_message'] = 'Cập nhật trạng thái tour thành công!';
             } catch (Exception $e) {
                 $_SESSION['error_message'] = 'Lỗi: ' . $e->getMessage();
             }
-            
+
             header("Location: " . BASE_URL . "?route=/tours/detail&tour_id=" . $tour_id);
             exit();
         }

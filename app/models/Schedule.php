@@ -8,7 +8,7 @@ class Schedule extends BaseModel
     // ==========================
     public function getAll()
     {
-        $sql = "SELECT s.*, t.tour_name, t.tour_code 
+        $sql = "SELECT s.*, t.tour_name, t.tour_code, t.image
                 FROM tour_schedule s
                 JOIN tour t ON s.tour_id = t.tour_id
                 ORDER BY s.schedule_id DESC";
@@ -28,7 +28,7 @@ class Schedule extends BaseModel
     // ==========================
     public function getById($id)
     {
-        $sql = "SELECT s.*, t.tour_name, t.tour_code
+        $sql = "SELECT s.*, t.tour_name, t.tour_code, t.image
                 FROM tour_schedule s
                 JOIN tour t ON s.tour_id = t.tour_id
                 WHERE s.schedule_id = ?";
@@ -57,11 +57,18 @@ class Schedule extends BaseModel
     // ==========================
     public function create($data)
     {
-        $sql = "INSERT INTO tour_schedule (tour_id, depart_date, meeting_point, seats_total, seats_booked, status)
-                VALUES (:tour_id, :depart_date, :meeting_point, :seats_total, :seats_booked, :status)";
+        $sql = "INSERT INTO tour_schedule (tour_id, depart_date, return_date, meeting_point, seats_total, seats_booked, status)
+                VALUES (:tour_id, :depart_date, :return_date, :meeting_point, :seats_total, :seats_booked, :status)";
 
         $stmt = $this->db->prepare($sql);
-        return $stmt->execute($data);
+        $result = $stmt->execute($data);
+        
+        // Return the inserted ID if successful
+        if ($result) {
+            return $this->db->lastInsertId();
+        }
+        
+        return false;
     }
 
     // ==========================
@@ -70,7 +77,7 @@ class Schedule extends BaseModel
     public function update($id, $data)
     {
         $sql = "UPDATE tour_schedule
-                SET tour_id = :tour_id, depart_date = :depart_date, meeting_point = :meeting_point, 
+                SET tour_id = :tour_id, depart_date = :depart_date, return_date = :return_date, meeting_point = :meeting_point, 
                     seats_total = :seats_total, seats_booked = :seats_booked, status = :status
                 WHERE schedule_id = :schedule_id";
 
@@ -136,9 +143,23 @@ class Schedule extends BaseModel
     {
         $offset = ($page - 1) * $itemsPerPage;
         
-        // Base query
-        $sql = "SELECT s.*, t.tour_name, t.tour_code FROM tour_schedule s JOIN tour t ON s.tour_id = t.tour_id WHERE 1=1";
-        $countSql = "SELECT COUNT(*) FROM tour_schedule s JOIN tour t ON s.tour_id = t.tour_id WHERE 1=1";
+        // Base query - Modified to include guide information
+        $sql = "SELECT s.*, t.tour_name, t.tour_code, t.image, 
+                       ga.guide_id as assigned_guide_id,
+                       g.user_id as guide_user_id,
+                       u.full_name as guide_name
+                FROM tour_schedule s 
+                JOIN tour t ON s.tour_id = t.tour_id 
+                LEFT JOIN guide_assignment ga ON s.schedule_id = ga.schedule_id
+                LEFT JOIN guide g ON ga.guide_id = g.guide_id
+                LEFT JOIN users u ON g.user_id = u.user_id
+                WHERE 1=1";
+        $countSql = "SELECT COUNT(*) FROM tour_schedule s 
+                     JOIN tour t ON s.tour_id = t.tour_id 
+                     LEFT JOIN guide_assignment ga ON s.schedule_id = ga.schedule_id
+                     LEFT JOIN guide g ON ga.guide_id = g.guide_id
+                     LEFT JOIN users u ON g.user_id = u.user_id
+                     WHERE 1=1";
         
         $params = [];
         
@@ -200,7 +221,7 @@ class Schedule extends BaseModel
     // ==========================
     public function getRunningSchedules()
     {
-        $sql = "SELECT s.*, t.tour_name, t.tour_code, 
+        $sql = "SELECT s.*, t.tour_name, t.tour_code, t.image,
                        ga.guide_id as assigned_guide_id,
                        g.user_id as guide_user_id,
                        u.full_name as guide_name
@@ -234,7 +255,8 @@ class Schedule extends BaseModel
         // Calculate progress based on tour duration and logs
         if ($schedule) {
             $start_date = new DateTime($schedule['depart_date']);
-            $end_date = new DateTime($schedule['depart_date']); // For simplicity, we'll use depart_date
+            // Use return_date if available, otherwise use depart_date
+            $end_date = !empty($schedule['return_date']) ? new DateTime($schedule['return_date']) : new DateTime($schedule['depart_date']);
             $interval = $start_date->diff($end_date);
             $tour_duration = $interval->days > 0 ? $interval->days : 1; // Avoid division by zero
             
