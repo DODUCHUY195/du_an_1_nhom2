@@ -8,6 +8,7 @@
         <a class="block px-8 py-6 m-0 text-sm whitespace-nowrap dark:text-white text-slate-700" href="#">
             <img src="/du_an_11/app/assets/img/logo-ct-dark.png" class="inline h-full max-w-full transition-all duration-200 dark:hidden ease-nav-brand max-h-8" alt="main_logo" />
             <img src="/du_an_11/app/assets/img/logo-ct.png" class="hidden h-full max-w-full transition-all duration-200 dark:inline ease-nav-brand max-h-8" alt="main_logo" />
+            
             <span class="ml-1 font-semibold transition-all duration-200 ease-nav-brand">Admin</span>
         </a>
     </div>
@@ -19,8 +20,8 @@
         <ul class="flex flex-col pl-0 mb-0">
 
             <li class="mt-0.5 w-full">
-                <a class="py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap rounded-lg px-4 font-semibold text-slate-700 <?= active('/') ?>"
-                   href="<?= BASE_URL . '?route=/' ?>">
+                <a class="py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap rounded-lg px-4 font-semibold text-slate-700 <?= active('/admin') ?>"
+                    href="<?= BASE_URL . '?route=/admin' ?>">
                     <div class="mr-2 flex h-8 w-8 items-center justify-center rounded-lg text-center">
                         <i class="relative top-0 text-sm leading-normal text-blue-500 ni ni-tv-2"></i>
                     </div>
@@ -29,27 +30,72 @@
             </li>
 
 
-            <li class="mt-0.5 w-full">
-                <a class="py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap rounded-lg px-4 font-semibold text-slate-700 <?= active('/categories') ?>"
-                   href="<?= BASE_URL . '?route=/categories' ?>">
-                    <div class="mr-2 flex h-8 w-8 items-center justify-center rounded-lg text-center">
-                        <i class="relative top-0 text-sm leading-normal text-blue-500 ni ni-tv-2"></i>
-                    </div>
-                    <span class="ml-1 duration-300 opacity-100 ease">Danh Mục</span>
-                </a>
-            </li>
-
+            
 
             <li class="mt-0.5 w-full">
                 <a class="py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap rounded-lg px-4 font-semibold text-slate-700 <?= active('/tours') ?>"
-                   href="<?= BASE_URL . '?route=/tours' ?>">
+                    href="<?= BASE_URL . '?route=/tours' ?>">
                     <div class="mr-2 flex h-8 w-8 items-center justify-center rounded-lg text-center">
                         <i class="relative top-0 text-sm leading-normal text-blue-500 ni ni-tv-2"></i>
                     </div>
                     <span class="ml-1 duration-300 opacity-100 ease">Tour</span>
                 </a>
             </li>
-            
+
+            <li class="mt-0.5 w-full">
+                <a class="py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap rounded-lg px-4 font-semibold text-slate-700 <?= active('/bookings') ?>"
+                    href="<?= BASE_URL . '?route=/bookings' ?>">
+                    <div class="mr-2 flex h-8 w-8 items-center justify-center rounded-lg text-center">
+                        <i class="relative top-0 text-sm leading-normal text-blue-500 ni ni-tv-2"></i>
+                    </div>
+                    <span class="ml-1 duration-300 opacity-100 ease">Bookings</span>
+                </a>
+            </li>
+
+            <li class="mt-0.5 w-full">
+                <a class="py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap rounded-lg px-4 font-semibold text-slate-700 <?= active('/schedules') ?>"
+                   href="<?= BASE_URL . '?route=/schedules' ?>">
+                    <div class="mr-2 flex h-8 w-8 items-center justify-center rounded-lg text-center">
+                        <i class="relative top-0 text-sm leading-normal text-blue-500 ni ni-calendar-grid-58"></i>
+                    </div>
+                    <span class="ml-1 duration-300 opacity-100 ease">Lịch Trình</span>
+                </a>
+            </li>
+
+            <li class="mt-0.5 w-full">
+                <a class="py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap rounded-lg px-4 font-semibold text-slate-700 <?= active('/customerBooking/select') ?>"
+                    href="<?=  BASE_URL . '?route=/customerBooking/select' ?>">
+                    <div class="mr-2 flex h-8 w-8 items-center justify-center rounded-lg text-center">
+                        <i class="ni ni-circle-08 text-blue-500 text-base"></i>
+                    </div>
+                    <span class="ml-1 duration-300 opacity-100 ease">Quản lý khách hàng</span>
+                </a>
+            </li>
+           
+            <li class="mt-0.5 w-full">
+                <a class="py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap rounded-lg px-4 font-semibold text-slate-700 <?= active('/guides') ?>"
+                    href="<?=  BASE_URL . '?route=/guides' ?>">
+                    <div class="mr-2 flex h-8 w-8 items-center justify-center rounded-lg text-center">
+                        <i class="ni ni-badge text-green-500 text-base"></i>
+                    </div>
+                    <span class="ml-1 duration-300 opacity-100 ease">Quản lý HDV</span>
+                </a>
+            </li>
+                    
+                   
+                <li class="mt-0.5 w-full">
+                <a class="py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap rounded-lg px-4 font-semibold text-slate-700 <?= active('/accounts') ?>"
+                    href="<?=  BASE_URL . '?route=/accounts' ?>">
+                    <div class="mr-2 flex h-8 w-8 items-center justify-center rounded-lg text-center">
+                        <i class="ni ni-badge text-green-500 text-base"></i>
+                    </div>
+                    <span class="ml-1 duration-300 opacity-100 ease">Quản lý Tài Khoản</span>
+                </a>
+            </li>
+
+
+
+
             <!-- copy toàn bộ menu bạn đã gửi y nguyên -->
             <?= $sidebarItems ?? "" ?>
 

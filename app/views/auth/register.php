@@ -1,8 +1,14 @@
-<h2>Register</h2>
-<form method="post">
-  <label>Full name <input type="text" name="full_name" required></label><br>
-  <label>Email <input type="email" name="email" required></label><br>
-  <label>Phone <input type="text" name="phone"></label><br>
-  <label>Password <input type="password" name="password" required></label><br>
-  <button>Register</button>
+<h2>Đăng ký</h2>
+<form method="POST" action="<?= BASE_URL . 'index.php?route=/postRegister' ?>">
+    <input name="full_name" placeholder="Họ và tên" required>
+    <input name="email" type="email" placeholder="Email" required>
+    <input name="phone" placeholder="Số điện thoại">
+    <input name="password" type="password" placeholder="Mật khẩu" required>
+    <select name="role">
+        <option value="Customer">Khách hàng</option>
+        <option value="QuanLy">Quản lý</option>
+        <option value="AdminTong">Admin tổng</option>
+    </select>
+    <button type="submit">Đăng ký</button>
 </form>
+<p>Đã có tài khoản? <a href="<?= BASE_URL . 'index.php?route=/login' ?>">Đăng nhập ngay</a></p>

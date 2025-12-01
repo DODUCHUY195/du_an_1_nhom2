@@ -21,16 +21,18 @@
         <div class="flex items-center mt-2 grow sm:mt-0 sm:mr-6 md:mr-0">
 
             <!-- Search -->
-            <div class="flex items-center md:ml-auto md:pr-4">
+            <!-- <div class="flex items-center md:ml-auto md:pr-4">
                 <div class="relative flex">
                     <input type="text"
                            class="pl-9 text-sm bg-white border border-gray-300 rounded-lg py-2 pr-3"
                            placeholder="Type here..." />
                 </div>
-            </div>
+            </div> -->
+
+            
 
             <!-- Icons -->
-            <ul class="flex flex-row justify-end pl-0 mb-0 list-none">
+            <!-- <ul class="flex flex-row justify-end pl-0 mb-0 list-none">
                 <li class="flex items-center">
                     <a href="#" class="px-0 py-2 text-sm font-semibold text-blue">
                         <i class="fa fa-user mr-1"></i>
@@ -43,7 +45,9 @@
                         <i class="cursor-pointer fa fa-cog"></i>
                     </a>
                 </li>
-            </ul>
+            </ul> -->
+
+            
 
         </div>
     </div>

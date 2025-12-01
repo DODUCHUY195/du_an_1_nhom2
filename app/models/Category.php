@@ -62,4 +62,16 @@ class Category extends BaseModel
         }
     }
 
+    public function delete($id)
+    {
+        $sql = "DELETE FROM category WHERE category_id = :id";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([':id' => $id]);
+    }
+
+    public function deleteDanhMuc($id)
+    {
+        return $this->delete($id);
+    }
+
 }

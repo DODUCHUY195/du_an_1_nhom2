@@ -1,4 +1,5 @@
 <?php
+
 function connectDB(){
     $host = DB_HOST;
     $port = DB_PORT;
@@ -37,6 +38,38 @@ function active($route) {
     return $current === $route 
         ? "font-bold text-blue-600 bg-blue-100" 
         : "text-slate-600 hover:text-blue-600";
+}
+
+function set($key, $value) {
+        $_SESSION[$key] = $value;
+    }
+
+    function get($key) {
+        return $_SESSION[$key] ?? null;
+    }
+ function destroy() {
+        session_start();
+        session_destroy();
+    }
+
+    function checkPermission($route, $role)
+{
+    $public = ['/login', '/register', '/postLogin', '/postRegister'];
+    if (in_array($route, $public)) return;
+    if (str_starts_with($route, '/admin') && $role !== 'AdminTong') {
+        echo "⛔ Chỉ Admin tổng mới được truy cập.";
+        exit;
+    }
+
+    if (str_starts_with($route, '/manager') && !in_array($role, ['AdminTong', 'QuanLy'])) {
+        echo "⛔ Chỉ Admin tổng hoặc Quản lý mới được truy cập.";
+        exit;
+    }
+
+    if (str_starts_with($route, '/') && !in_array($role, ['AdminTong', 'QuanLy', 'Customer'])) {
+        echo "⛔ Bạn chưa đăng nhập hoặc không có quyền.";
+        exit;
+    }
 }
 
 ?>

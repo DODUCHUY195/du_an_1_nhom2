@@ -40,7 +40,7 @@ class CategoryController
         $id = $_GET['category_id'];
         $danhMuc = $this->modelDanhMuc->getDetailDanhMuc($id);
 
-            require_once './views/category/editForm.php';
+        require_once './views/category/editForm.php';
         
     }
 
@@ -64,5 +64,37 @@ public function postEdit(){
            
         }
        
+    }
+
+    public function delete()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header("Location: " . BASE_URL . "?route=/categories");
+            exit;
+        }
+
+        $id = $_POST['id'] ?? null;
+        if (!$id) {
+            $_SESSION['flash'] = ['type'=>'danger','msg'=>'ID không hợp lệ'];
+            header("Location: " . BASE_URL . "?route=/categories");
+            exit;
+        }
+
+        if (method_exists($this->modelDanhMuc, 'delete')) {
+            $ok = $this->modelDanhMuc->delete($id);
+        } elseif (method_exists($this->modelDanhMuc, 'deleteDanhMuc')) {
+            $ok = $this->modelDanhMuc->deleteDanhMuc($id);
+        } else {
+            $ok = false;
+        }
+
+        if ($ok) {
+            $_SESSION['flash'] = ['type'=>'success','msg'=>'Xóa danh mục thành công'];
+        } else {
+            $_SESSION['flash'] = ['type'=>'danger','msg'=>'Xóa danh mục thất bại'];
+        }
+
+        header("Location: " . BASE_URL . "?route=/categories");
+        exit;
     }
 }

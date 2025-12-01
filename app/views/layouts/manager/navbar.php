@@ -30,7 +30,7 @@
             </div>
 
             <!-- Icons -->
-            <ul class="flex flex-row justify-end pl-0 mb-0 list-none">
+            <!-- <ul class="flex flex-row justify-end pl-0 mb-0 list-none">
                 <li class="flex items-center">
                     <a href="#" class="px-0 py-2 text-sm font-semibold text-blue">
                         <i class="fa fa-user mr-1"></i>
@@ -43,7 +43,12 @@
                         <i class="cursor-pointer fa fa-cog"></i>
                     </a>
                 </li>
-            </ul>
+            </ul> -->
+
+            <div class="user-status">
+    <p>👋 Xin chào, <strong><?= $_SESSION['user']['full_name'] ?></strong> (<?= $_SESSION['user']['role'] ?>)</p>
+    <a href="<?= BASE_URL ?>index.php?route=/logout">🚪 Đăng xuất</a>
+</div>
 
         </div>
     </div>

@@ -1,7 +1,7 @@
-<h2>Login</h2>
-<form method="post">
-  <label>Email <input type="email" name="email" required></label><br>
-  <label>Password <input type="password" name="password" required></label><br>
-  <button>Login</button>
+<h2>Đăng nhập</h2>
+<form method="POST" action="<?= BASE_URL . 'index.php?route=/postLogin' ?>">
+    <input name="email" placeholder="Email" required>
+    <input name="password" type="password" placeholder="Mật khẩu" required>
+    <button type="submit">Đăng nhập</button>
 </form>
-<p><a href="/register">Register</a></p>
+<p>Bạn chưa có tài khoản? <a href="<?= BASE_URL . 'index.php?route=/register' ?>">Đăng ký ngay</a></p>

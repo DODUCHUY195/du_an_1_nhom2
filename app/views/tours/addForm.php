@@ -1,48 +1,88 @@
-<?php require_once "./views/layouts/admin/header.php"; ?>
-
-<?php require_once  "./views/layouts/admin/sidebar.php"; ?>
+<?php require_once APP_PATH . "/views/layouts/admin/header.php"; ?>
+<?php require_once APP_PATH . "/views/layouts/admin/sidebar.php"; ?>
 
 <main class="relative h-full max-h-screen transition-all xl:ml-68 rounded-xl">
+    <?php require_once APP_PATH . "/views/layouts/admin/navbar.php"; ?>
 
-  <?php require_once  "./views/layouts/admin/navbar.php"; ?>
-
-  <div class="w-full p-6 mx-auto">
-    <h2>Them danh muc</h2>
-    <div class="flex flex-wrap -mx-3">
-      <div class="w-full max-w-full px-3 shrink-0 md:w-8/12 md:flex-0">
-        <div class="relative flex flex-col min-w-0 break-words bg-white border-0 shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
-          <div class="border-black/12.5 rounded-t-2xl border-b-0 border-solid p-6 pb-0">
-            <div class="flex items-center">
-              
-              
-            </div>
-          </div>
-          <div class="flex-auto p-6">
-            <p class="leading-normal uppercase dark:text-white dark:opacity-60 text-sm">Thong tin</p>
-            <div class="flex flex-wrap -mx-3">
-              <div class="w-full max-w-full px-3 shrink-0 md:w-6/12 md:flex-0">
-                <div class="mb-4">
-                  <label for="username" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Name</label>
-                  <input type="text" name="username"  class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
-                </div>
-              </div>
-              <div class="w-full max-w-full px-3 shrink-0 md:w-6/12 md:flex-0">
-                <div class="mb-4">
-                  <label for="email" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Description</label>
-                  <input type="email" name="email" class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
-                </div>
-              </div>
-              
-              
-            </div>
-            <hr class="h-px mx-0 my-4 bg-transparent border-0 opacity-25 bg-gradient-to-r from-transparent via-black/40 to-transparent dark:bg-gradient-to-r dark:from-transparent dark:via-white dark:to-transparent " />
-
-           
-           <button type="button" class="inline-block px-8 py-2 mb-4 ml-auto font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">Them Moi</button>
+    <div class="w-full p-6 mx-auto">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold">Thêm Tour</h2>
+            <a href="<?= BASE_URL . '?route=/tours' ?>" 
+               class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
+                Quay lại
+            </a>
         </div>
-      </div>
+        
+        <form action="<?= BASE_URL . '?route=/tours/postAdd' ?>" method="POST" enctype="multipart/form-data">
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="tour_code" class="block mb-2 font-semibold">Mã Tour (Tự động tạo)</label>
+                        <input id="tour_code" type="text" value="<?= $tourCode ?>" readonly class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100"/>
+                        <input type="hidden" name="tour_code" value="<?= $tourCode ?>"/>
+                    </div>
 
+                    <div>
+                        <label for="tour_name" class="block mb-2 font-semibold">Tên Tour</label>
+                        <input id="tour_name" type="text" name="tour_name" placeholder="Tên tour" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+                    </div>
+
+                    
+                    <div>
+                        <label for="price" class="block mb-2 font-semibold">Giá</label>
+                        <input id="price" type="text" name="price" placeholder="Giá" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+                    </div>
+
+                    <div>
+                        <label for="start_date" class="block mb-2 font-semibold">Ngày bắt đầu</label>
+                        <input id="start_date" type="date" name="start_date" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+                    </div>
+
+                    <div>
+                        <label for="end_date" class="block mb-2 font-semibold">Ngày kết thúc</label>
+                        <input id="end_date" type="date" name="end_date" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+                    </div>
+
+                    <div>
+                        <label for="status" class="block mb-2 font-semibold">Trạng Thái</label>
+                        <select id="status" name="status" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <?php 
+                            $tourModel = new Tour();
+                            $statusOptions = $tourModel->getStatusOptions();
+                            foreach ($statusOptions as $statusValue => $statusLabel): ?>
+                                <option value="<?= $statusValue ?>" <?= $statusValue == 'draft' ? 'selected' : '' ?>>
+                                    <?= $statusLabel ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                        <div class="mt-2 text-sm text-gray-500">
+                            <i class="fas fa-info-circle"></i> 
+                            <?php 
+                            $tourModel = new Tour();
+                            echo $tourModel->getStatusDescription('draft');
+                            ?>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="image" class="block mb-2 font-semibold">Hình Ảnh</label>
+                        <input id="image" type="file" name="image" accept="image/*" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label for="description" class="block mb-2 font-semibold">Mô Tả</label>
+                        <textarea id="description" name="description" placeholder="Mô tả" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" rows="4"></textarea>
+                    </div>
+                </div>
+
+                <div class="text-center mt-6">
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg">
+                        Thêm Tour
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
 </main>
 
-
-<?php require_once  "./views/layouts/admin/footer.php"; ?>
+<?php require_once APP_PATH . "/views/layouts/admin/footer.php"; ?>

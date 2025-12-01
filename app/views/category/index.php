@@ -19,10 +19,10 @@
               <table class="items-center w-full mb-0 align-top border-collapse dark:border-white/40 text-slate-500">
                 <thead class="align-bottom">
                   <tr>
-                    <th class="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
+                    <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
                       STT
                     </th>
-                    <th class="px-6 py-3 pl-2 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
+                    <th class="px-6 py-3 pl-2 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
                       Mô tả
                     </th>
                     <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
@@ -41,17 +41,36 @@
 
                     <?php foreach ($listDanhMuc as $key => $danhMuc): ?>
                   <tr>
-                    <td><?= $key + 1 ?></td>
-                    <td><?= $danhMuc['category_name'] ?></td>
-                    
-                    <td><?= $danhMuc['description'] ?></td>
-                    <td>
-                      <a class="btn btn-primary" href="<?= BASE_URL . '?route=/categories/editForm&category_id='. $danhMuc['category_id'] ?>">
-                        Sua
+                    <td class="text-center"><?= $key + 1 ?></td>
+                    <td class="text-center"><?= $danhMuc['category_name'] ?></td>
+
+                    <td class="text-center"><?= $danhMuc['description'] ?></td>
+                    <td class="flex items-center gap-2 justify-center">
+
+                      <!-- Nút Sửa -->
+                      <a
+                        href="<?= BASE_URL . '?route=/categories/editForm&category_id=' . $danhMuc['category_id'] ?>"
+                        class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-black rounded-md text-sm transition">
+                        Sửa
                       </a>
-                      <a class="btn btn-danger" href="" onclick="return confirm('Bạn có đồng ý xoá không')"><i class="fas fa-trash-alt"></i>Xoa</a>
+
+                      <!-- Nút Xóa -->
+                      <form
+                        method="post"
+                        action="<?= BASE_URL . '?route=/categories/delete' ?>"
+                        onsubmit="return confirm('Bạn chắc chắn muốn xóa?')"
+                        class="inline">
+                        <input type="hidden" name="id" value="<?= htmlspecialchars($danhMuc['category_id']) ?>">
+
+                        <button
+                          type="submit"
+                          class="px-3 py-1 bg-red-600 hover:bg-red-700 text-black rounded-md text-sm transition">
+                          Xóa
+                        </button>
+                      </form>
 
                     </td>
+
                   </tr>
                 <?php endforeach ?>
 

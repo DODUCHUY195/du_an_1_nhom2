@@ -12,8 +12,5 @@ class HomeController
         require_once './views/manager.php';
     }
 
-    public function user()
-    {
-       require_once './views/user.php';
-    }
+  
 }
