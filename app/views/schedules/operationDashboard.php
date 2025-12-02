@@ -74,23 +74,75 @@
             <div class="bg-white rounded-xl shadow-md p-6">
                 <h3 class="text-lg font-semibold mb-4">Phân công hướng dẫn viên</h3>
                 <p class="text-gray-600 mb-4">Phân công hướng dẫn viên cho các tour đang chạy.</p>
-                <a href="<?= BASE_URL.'?route=/schedules' ?>" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                <a href="<?= BASE_URL.'?route=/schedules' ?>" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-900 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                     Xem danh sách
                 </a>
             </div>
             
             <div class="bg-white rounded-xl shadow-md p-6">
                 <h3 class="text-lg font-semibold mb-4">Theo dõi tiến độ</h3>
-                <p class="text-gray-600 mb-4">Xem tiến độ của các tour đang chạy.</p>
-                <a href="<?= BASE_URL.'?route=/schedules' ?>" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    Xem tiến độ
-                </a>
-            </div>
+                <p class="text-gray-600 mb-4">Tiến độ của tất cả các tour trong lịch trình.</p>
+                
+                <?php if (empty($allSchedules)): ?>
+                    <p class="text-gray-500">Không có tour nào trong lịch trình.</p>
+                <?php else: ?>
+                    <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 rounded-lg">
+                        <table class="min-w-full divide-y divide-gray-300">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Tour</th>
+                                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Ngày khởi hành</th>
+                                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">HDV</th>
+                                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Trạng thái</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200 bg-white">
+                                <?php foreach($allSchedules as $schedule): ?>
+                                    <tr>
+                                        <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                                            <div><?= $schedule['tour_name'] ?></div>
+                                            <div class="text-gray-500"><?= $schedule['tour_code'] ?></div>
+                                        </td>
+                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                            <?= date('d/m/Y', strtotime($schedule['depart_date'])) ?>
+                                        </td>
+                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                            <?php if ($schedule['assigned_guide_id']): ?>
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                    <?= htmlspecialchars($schedule['guide_name']) ?>
+                                                </span>
+                                            <?php else: ?>
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                                    Chưa phân công
+                                                </span>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                            <?php if ($schedule['logs_approved']): ?>
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                    Đã hoàn thành
+                                                </span>
+                                            <?php elseif ($schedule['status'] == 'open' && strtotime($schedule['depart_date']) <= time()): ?>
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                                    Đang chạy
+                                                </span>
+                                            <?php else: ?>
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                                    <?= ucfirst($schedule['status']) ?>
+                                                </span>
+                                            <?php endif; ?>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                <?php endif; ?>
             
             <div class="bg-white rounded-xl shadow-md p-6">
                 <h3 class="text-lg font-semibold mb-4">Nhật ký hàng ngày</h3>
                 <p class="text-gray-600 mb-4">Xem và quản lý nhật ký tour.</p>
-                <a href="<?= BASE_URL.'?route=/schedules' ?>" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                <a href="<?= BASE_URL.'?route=/schedules/tourDiary' ?>" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-900 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                     Xem nhật ký
                 </a>
             </div>

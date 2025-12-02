@@ -23,6 +23,7 @@ $models = [
     APP_PATH . '/models/Daily_log.php',
     APP_PATH . '/models/Guide.php',
     APP_PATH . '/models/GuideAssignment.php',
+    APP_PATH . '/models/Passenger.php',
     APP_PATH . '/models/Schedule.php',
     APP_PATH . '/models/Tour.php',
     APP_PATH . '/models/User.php',
@@ -222,6 +223,50 @@ switch ($route) {
 
     case '/schedules/addDailyLog':
         callController('ScheduleController', 'addDailyLog');
+        break;
+        
+    case '/schedules/editDailyLog':
+        callController('ScheduleController', 'editDailyLog');
+        break;
+        
+    case '/schedules/updateDailyLog':
+        callController('ScheduleController', 'updateDailyLog');
+        break;
+        
+    case '/schedules/deleteDailyLog':
+        callController('ScheduleController', 'deleteDailyLog');
+        break;
+        
+    // 4) XÁC NHẬN KẾT THÚC TOUR
+    case '/schedules/confirmFinish':
+        callController('ScheduleController', 'confirmFinish');
+        break;
+        
+    // 5) QUẢN LÝ HÀNH KHÁCH
+    case '/schedules/passengerCheckIn':
+        callController('ScheduleController', 'passengerCheckIn');
+        break;
+        
+    case '/schedules/checkInPassenger':
+        callController('ScheduleController', 'checkInPassenger');
+        break;
+        
+    case '/schedules/checkOutPassenger':
+        callController('ScheduleController', 'checkOutPassenger');
+        break;
+        
+    case '/schedules/updateSpecialRequest':
+        callController('ScheduleController', 'updateSpecialRequest');
+        break;
+        
+    // Create passengers for bookings
+    case '/schedules/createPassengers':
+        callController('ScheduleController', 'createPassengers');
+        break;
+        
+    // 6) NHẬT KÝ TOUR TRUNG TÂM
+    case '/schedules/tourDiary':
+        callController('ScheduleController', 'tourDiary');
         break;
         
     default:

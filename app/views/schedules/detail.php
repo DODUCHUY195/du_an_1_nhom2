@@ -107,10 +107,16 @@
         <div class="bg-white rounded-xl shadow-md p-6">
             <div class="flex justify-between items-center mb-6">
                 <h3 class="text-lg font-semibold">Nhật ký tour</h3>
-                <a href="<?= BASE_URL.'?route=/schedules/dailyLog&schedule_id='.$schedule['schedule_id'] ?>" 
-                   class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    Quản lý nhật ký
-                </a>
+                <div class="flex space-x-3">
+                    <a href="<?= BASE_URL.'?route=/schedules/dailyLog&schedule_id='.$schedule['schedule_id'] ?>" 
+                       class="inline-flex items-center px-3 py-2 border border-gray-300 text-sm leading-4 font-medium rounded-md shadow-sm text-gray-900 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        Quản lý nhật ký
+                    </a>
+                    <a href="<?= BASE_URL.'?route=/schedules/passengerCheckIn&schedule_id='.$schedule['schedule_id'] ?>" 
+                       class="inline-flex items-center px-3 py-2 border border-gray-300 text-sm leading-4 font-medium rounded-md shadow-sm text-gray-900 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                        Điểm danh hành khách
+                    </a>
+                </div>
             </div>
             
             <?php if (empty($logs)): ?>
@@ -165,7 +171,7 @@
                     <div class="flex items-center justify-between">
                         <p class="text-gray-600">Xác nhận khi tour đã kết thúc để đánh dấu hoàn thành.</p>
                         <a href="<?= BASE_URL.'?route=/schedules/confirmFinish&schedule_id='.$schedule['schedule_id'] ?>" 
-                           class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                           class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-900 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
                            onclick="return confirm('Bạn có chắc chắn muốn xác nhận kết thúc tour này?')">
                             Xác nhận kết thúc
                         </a>

@@ -166,6 +166,7 @@ class ScheduleController
     {
         $model = new Schedule();
         $runningSchedules = $model->getRunningSchedules();
+        $allSchedules = $model->getAll();
         
         require "./views/schedules/operationDashboard.php";
     }
@@ -265,6 +266,14 @@ class ScheduleController
         
         // Get grouped logs by date
         $groupedLogs = $log->getLogsGroupedByDate($schedule_id);
+        
+        // Get assigned guide for this schedule
+        $assign = new GuideAssignment();
+        $assignedGuide = $assign->getAssignedGuide($schedule_id);
+        
+        // Get all guides for dropdown
+        $guideModel = new Guide();
+        $guides = $guideModel->all();
 
         require "./views/schedules/dailyLog.php";
     }
@@ -274,11 +283,47 @@ class ScheduleController
         $schedule_id = $_POST['schedule_id'];
         $guide_id    = $_POST['guide_id'];
         $content     = $_POST['content'];
+        $incident    = $_POST['incident'] ?? null;
+        $resolution  = $_POST['resolution'] ?? null;
 
         $log = new DailyLog();
-        $log->addLog($guide_id, $schedule_id, $content);
+        $log->addLog($guide_id, $schedule_id, $content, $incident, $resolution);
 
         header("Location: ?route=/schedules/dailyLog&schedule_id=" . $schedule_id);
+    }
+    
+    // Edit a daily log form
+    public function editDailyLog()
+    {
+        $log_id = $_GET['log_id'];
+        $schedule_id = $_GET['schedule_id'];
+        
+        $log = new DailyLog();
+        $logData = $log->find($log_id);
+        
+        // Get all guides for dropdown
+        $guideModel = new Guide();
+        $guides = $guideModel->all();
+        
+        require "./views/schedules/editDailyLog.php";
+    }
+    
+    // Update a daily log
+    public function updateDailyLog()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $log_id = $_POST['log_id'];
+            $schedule_id = $_POST['schedule_id'];
+            $content = $_POST['content'];
+            $incident = $_POST['incident'] ?? null;
+            $resolution = $_POST['resolution'] ?? null;
+            
+            $log = new DailyLog();
+            $log->updateLog($log_id, $content, $incident, $resolution);
+            
+            header("Location: ?route=/schedules/dailyLog&schedule_id=" . $schedule_id);
+            exit();
+        }
     }
     
     // Delete a daily log
@@ -309,6 +354,92 @@ class ScheduleController
     }
     
     // ==========================
+    // QUẢN LÝ HÀNH KHÁCH
+    // ==========================
+    
+    // Check-in passenger
+    public function checkInPassenger()
+    {
+        $passenger_id = $_GET['passenger_id'];
+        $schedule_id = $_GET['schedule_id'];
+        
+        $passenger = new Passenger();
+        $passenger->checkIn($passenger_id);
+        
+        header("Location: ?route=/schedules/passengerCheckIn&schedule_id=" . $schedule_id);
+    }
+    
+    // Check-out passenger
+    public function checkOutPassenger()
+    {
+        $passenger_id = $_GET['passenger_id'];
+        $schedule_id = $_GET['schedule_id'];
+        
+        $passenger = new Passenger();
+        $passenger->checkOut($passenger_id);
+        
+        header("Location: ?route=/schedules/passengerCheckIn&schedule_id=" . $schedule_id);
+    }
+    
+    // View passenger check-in page
+    public function passengerCheckIn()
+    {
+        $schedule_id = $_GET['schedule_id'];
+        
+        // Create passengers for bookings that don't have them
+        $passenger = new Passenger();
+        $passenger->createPassengersForBookings();
+        
+        // Get schedule details
+        $scheduleModel = new Schedule();
+        $schedule = $scheduleModel->getById($schedule_id);
+        
+        // Get all passengers for this schedule
+        $passengers = $passenger->getPassengersBySchedule($schedule_id);
+        
+        // Get check-in statistics
+        $checkInStats = $passenger->getCheckInStats($schedule_id);
+        
+        require "./views/schedules/passengerCheckIn.php";
+    }
+    
+    // Update special request for passenger
+    public function updateSpecialRequest()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $passenger_id = $_POST['passenger_id'];
+            $schedule_id = $_POST['schedule_id'];
+            $special_request = $_POST['special_request'];
+            
+            $passenger = new Passenger();
+            $passenger->updateSpecialRequest($passenger_id, $special_request);
+            
+            header("Location: ?route=/schedules/passengerCheckIn&schedule_id=" . $schedule_id);
+            exit();
+        }
+    }
+    
+    // Create passengers for all bookings
+    public function createPassengers()
+    {
+        // Get schedule_id from GET parameter
+        $schedule_id = $_GET['schedule_id'] ?? null;
+        
+        if (!$schedule_id) {
+            // If no schedule_id provided, redirect to schedules list
+            header("Location: ?route=/schedules&message=" . urlencode("Vui lòng chọn lịch trình để tạo hành khách"));
+            exit();
+        }
+        
+        $passenger = new Passenger();
+        $createdCount = $passenger->createPassengersForBookings();
+        
+        // Redirect back to passenger check-in page
+        header("Location: ?route=/schedules/passengerCheckIn&schedule_id=" . $schedule_id . "&message=" . urlencode("Đã tạo $createdCount hành khách mới"));
+        exit();
+    }
+    
+    // ==========================
     // CẬP NHẬT SỐ GHẾ
     // ==========================
     
@@ -324,5 +455,18 @@ class ScheduleController
             header("Location: ?route=/schedules");
             exit();
         }
+    }
+    
+    // ==========================
+    // NHẬT KÝ TOUR TRUNG TÂM
+    // ==========================
+    
+    // View centralized tour diary
+    public function tourDiary()
+    {
+        $dailyLog = new DailyLog();
+        $logs = $dailyLog->getAllLogsForDiary();
+        
+        require "./views/schedules/tourDiary.php";
     }
 }

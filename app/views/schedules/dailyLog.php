@@ -22,8 +22,14 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Hướng dẫn viên</label>
-                        <input type="text" name="guide_id" placeholder="ID HDV" 
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                        <select name="guide_id" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                            <option value="">Chọn hướng dẫn viên</option>
+                            <?php foreach($guides as $guide): ?>
+                                <option value="<?= $guide['guide_id'] ?>" <?= (isset($assignedGuide) && $assignedGuide['guide_id'] == $guide['guide_id']) ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($guide['guide_name']) ?> (ID: <?= $guide['guide_id'] ?>)
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
                     </div>
                     
                     <div>
@@ -32,10 +38,24 @@
                                   class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                                   placeholder="Nhập nội dung nhật ký..."></textarea>
                     </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Sự cố (nếu có)</label>
+                        <textarea name="incident" rows="3" 
+                                  class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                                  placeholder="Mô tả sự cố nếu có..."></textarea>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Cách xử lý</label>
+                        <textarea name="resolution" rows="3" 
+                                  class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                                  placeholder="Cách xử lý sự cố..."></textarea>
+                    </div>
                 </div>
                 
                 <div class="flex justify-end">
-                    <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    <button type="submit" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-900 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                         Thêm nhật ký
                     </button>
                 </div>
@@ -71,6 +91,10 @@
                                         <?= htmlspecialchars($log['content']) ?>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <a href="?route=/schedules/editDailyLog&log_id=<?= $log['log_id'] ?>&schedule_id=<?= $schedule_id ?>" 
+                                           class="text-indigo-600 hover:text-indigo-900 mr-3">
+                                            Sửa
+                                        </a>
                                         <a href="?route=/schedules/deleteDailyLog&log_id=<?= $log['log_id'] ?>&schedule_id=<?= $schedule_id ?>" 
                                            class="text-red-600 hover:text-red-900"
                                            onclick="return confirm('Bạn có chắc chắn muốn xóa nhật ký này?')">

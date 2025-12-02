@@ -8,9 +8,15 @@ class Schedule extends BaseModel
     // ==========================
     public function getAll()
     {
-        $sql = "SELECT s.*, t.tour_name, t.tour_code, t.image
+        $sql = "SELECT s.*, t.tour_name, t.tour_code, t.image,
+                       ga.guide_id as assigned_guide_id,
+                       g.user_id as guide_user_id,
+                       u.full_name as guide_name
                 FROM tour_schedule s
                 JOIN tour t ON s.tour_id = t.tour_id
+                LEFT JOIN guide_assignment ga ON s.schedule_id = ga.schedule_id
+                LEFT JOIN guide g ON ga.guide_id = g.guide_id
+                LEFT JOIN users u ON g.user_id = u.user_id
                 ORDER BY s.schedule_id DESC";
 
         $stmt = $this->db->prepare($sql);
@@ -221,7 +227,7 @@ class Schedule extends BaseModel
     // ==========================
     public function getRunningSchedules()
     {
-        $sql = "SELECT s.*, t.tour_name, t.tour_code, t.image,
+        $sql = "SELECT s.*, t.tour_name, t.tour_code, t.image, s.logs_approved,
                        ga.guide_id as assigned_guide_id,
                        g.user_id as guide_user_id,
                        u.full_name as guide_name

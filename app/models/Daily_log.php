@@ -19,13 +19,24 @@ class DailyLog extends BaseModel
     }
 
     // Thêm nhật ký ngày
-    public function addLog($guide_id, $schedule_id, $content)
+    public function addLog($guide_id, $schedule_id, $content, $incident = null, $resolution = null)
     {
-        $sql = "INSERT INTO daily_log (guide_id, schedule_id, log_date, content) 
-                VALUES (?, ?, CURDATE(), ?)";
+        $sql = "INSERT INTO daily_log (guide_id, schedule_id, log_date, content, incident, resolution) 
+                VALUES (?, ?, CURDATE(), ?, ?, ?)";
 
         $stm = $this->db->prepare($sql);
-        return $stm->execute([$guide_id, $schedule_id, $content]);
+        return $stm->execute([$guide_id, $schedule_id, $content, $incident, $resolution]);
+    }
+
+    // Cập nhật nhật ký
+    public function updateLog($log_id, $content, $incident = null, $resolution = null)
+    {
+        $sql = "UPDATE daily_log 
+                SET content = ?, incident = ?, resolution = ?
+                WHERE log_id = ?";
+
+        $stm = $this->db->prepare($sql);
+        return $stm->execute([$content, $incident, $resolution, $log_id]);
     }
 
     // Lấy log theo ID (nếu cần sửa)
@@ -75,6 +86,22 @@ class DailyLog extends BaseModel
 
         $stm = $this->db->prepare($sql);
         $stm->execute([$schedule_id]);
+        return $stm->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
+    // Get all logs with tour and guide information for centralized view
+    public function getAllLogsForDiary()
+    {
+        $sql = "SELECT dl.*, u.full_name as guide_name, s.depart_date, t.tour_name, t.tour_code
+                FROM daily_log dl
+                JOIN guide g ON dl.guide_id = g.guide_id
+                JOIN users u ON g.user_id = u.user_id
+                JOIN tour_schedule s ON dl.schedule_id = s.schedule_id
+                JOIN tour t ON s.tour_id = t.tour_id
+                ORDER BY dl.created_at DESC";
+
+        $stm = $this->db->prepare($sql);
+        $stm->execute();
         return $stm->fetchAll(PDO::FETCH_ASSOC);
     }
 }
